@@ -302,23 +302,6 @@ function KuwaitVisaPortalLanding() {
                   className="action-icon"
                 />
               </button>
-
-              {/* Admin Sign-In */}
-              <Link
-                to="/admin"
-                className="d-flex align-items-center c-pointer hover text-decoration-none"
-                style={{
-                  background: "rgba(0, 169, 233, 0.08)",
-                  padding: "0.5rem 1.25rem",
-                  borderRadius: "2rem",
-                }}
-                title="Go to Admin Portal"
-              >
-                <img src="/assets/icons/enter.svg" className="action-icon" alt="Sign-in" />
-                <span className="text-1 ibm-medium text-blue-1 ms-2" style={{ fontWeight: 600, color: "#0C568C" }}>
-                  Admin
-                </span>
-              </Link>
             </div>
           </div>
         </div>
@@ -932,7 +915,7 @@ function KuwaitVisaPortalLanding() {
                 <p className="ibm-bold mb-3 text-blue-3" style={{ fontSize: "1.1rem", fontWeight: 700, color: "#0C568C" }}>Information</p>
                 <p className="text-muted mb-1 c-pointer hover">About Kuwait</p>
                 <p className="text-muted mb-1 c-pointer hover">Visa Instructions</p>
-                <Link to="/admin" className="text-decoration-none text-muted mb-1 d-block hover">Admin Portal</Link>
+                <p className="text-muted mb-1 c-pointer hover">Terms & Conditions</p>
               </div>
             </div>
           </div>
@@ -971,11 +954,10 @@ function KuwaitVisaPortalLanding() {
                   <button type="button" className="btn-close" onClick={() => setModal(null)}>✕</button>
                 </div>
                 <p className="text-muted">
-                  New applications are submitted directly through the eVisa portal. To issue and manage authorized visas, sign in to the Admin console.
+                  The eVisa application service is available for eligible nationalities. Please ensure your passport is valid for at least 6 months prior to application.
                 </p>
                 <div className="mt-4 d-flex justify-content-end gap-2">
-                  <button type="button" className="btn btn-secondary rounded-4 px-4" onClick={() => setModal(null)}>Cancel</button>
-                  <Link to="/admin" className="btn-1 rounded-4 px-4 py-2 text-decoration-none font-bold">Sign in as Admin</Link>
+                  <button type="button" className="btn btn-secondary rounded-4 px-4" onClick={() => setModal(null)}>Close</button>
                 </div>
               </div>
             )}

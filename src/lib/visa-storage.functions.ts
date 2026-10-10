@@ -92,8 +92,16 @@ const LIST_COLUMNS =
 
 function isSupabaseConfigured() {
   const url = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  return !!(url && key && key !== "sb_secret_local_dev_key" && !key.startsWith("sb_secret_local"));
+  const key =
+    process.env.SUPABASE_SERVICE_ROLE_KEY ||
+    process.env.SUPABASE_PUBLISHABLE_KEY ||
+    process.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+  return !!(
+    url &&
+    key &&
+    !key.startsWith("sb_secret_local") &&
+    !key.startsWith("sb_publishable_local")
+  );
 }
 
 // PUBLIC: look up a visa by its OTP id or passport.
