@@ -1,0 +1,1 @@
+import{a as e}from"./index--ublQLgp.js";var t=e(),n=()=>(0,t.jsx)(`div`,{className:`mx-auto max-w-xl p-8 text-center text-gray-700`,children:`Visa not found.`});export{n as notFoundComponent};

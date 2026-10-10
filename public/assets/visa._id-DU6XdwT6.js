@@ -1,0 +1,1 @@
+import{t as e}from"./jsx-runtime-DGeXAQPT.js";var t=e(),n=({error:e})=>(0,t.jsx)(`div`,{className:`mx-auto max-w-xl p-8 text-center text-red-600`,children:e.message});export{n as errorComponent};

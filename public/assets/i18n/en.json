@@ -1,0 +1,1522 @@
+{
+  "COMMON": {
+    "KWD": "KWD"
+  },
+  "VISA_FEES_NOTES": {
+    "CURRENCY": "All amounts are collected in Kuwaiti Dinars",
+    "NON_REFUNDABLE": "All collected amounts are non-refundable",
+    "EXTENSION_FEES": "In case of visit extension, the same fees will be collected"
+  },
+  "VISAFEES": {
+    "RESIDENCY_FEES_TITLE": "Residency Visa Fees",
+    "VISIT_FEES_TITLE": "Visit Visa Fees",
+    "TABLE_HEADERS": {
+      "ENTRY_TYPE": "Entry Type",
+      "ENTRY_FEE": "Entry Fee",
+      "PENALTY_PER_DAY": "Penalty Per Day"
+    },
+    "RESIDENCY_FEES": [
+      {
+        "ENTRY_TYPE": "Government Work Entry Visa",
+        "ENTRY_FEE": "3 KWD",
+        "PENALTY_PER_DAY": "2 KWD per day in the first month \n 4 KWD per day thereafter"
+      },
+      {
+        "ENTRY_TYPE": "Private Sector Work Entry Visa",
+        "ENTRY_FEE": "3 KWD",
+        "PENALTY_PER_DAY": "2 KWD per day in the first month \n 4 KWD per day thereafter"
+      },
+      {
+        "ENTRY_TYPE": "Domestic Workers Entry Visa",
+        "ENTRY_FEE": "3 KWD",
+        "PENALTY_PER_DAY": "2 KWD per day"
+      },
+      {
+        "ENTRY_TYPE": "Commercial & Industrial Activity Entry Visa",
+        "ENTRY_FEE": "3 KWD",
+        "PENALTY_PER_DAY": "2 KWD per day in the first month \n 4 KWD per day thereafter"
+      },
+      {
+        "ENTRY_TYPE": "Dependent Visa",
+        "ENTRY_FEE": "3 KWD",
+        "PENALTY_PER_DAY": "2 KWD per day in the first month \n 4 KWD per day thereafter"
+      },
+      {
+        "ENTRY_TYPE": "Student Visa",
+        "ENTRY_FEE": "3 KWD",
+        "PENALTY_PER_DAY": "2 KWD per day in the first month \n 4 KWD per day thereafter"
+      },
+      {
+        "ENTRY_TYPE": "Temporary Government Contract Entry Visa",
+        "ENTRY_FEE": "3 KWD",
+        "PENALTY_PER_DAY": "2 KWD per day in the first month \n 4 KWD per day thereafter"
+      }
+    ],
+    "VISIT_FEES": [
+      {
+        "ENTRY_TYPE": "Government Visit Visa",
+        "ENTRY_FEE": "3 KWD",
+        "PENALTY_PER_DAY": "10 KWD per day"
+      },
+      {
+        "ENTRY_TYPE": "Family Visit Visa",
+        "ENTRY_FEE": "3 KWD",
+        "PENALTY_PER_DAY": "10 KWD per day"
+      },
+      {
+        "ENTRY_TYPE": "Private Visit Visa",
+        "ENTRY_FEE": "3 KWD",
+        "PENALTY_PER_DAY": "10 KWD per day"
+      },
+      {
+        "ENTRY_TYPE": "Tourism Visit Visa",
+        "ENTRY_FEE": "3 KWD",
+        "PENALTY_PER_DAY": "10 KWD per day"
+      },
+      {
+        "ENTRY_TYPE": "Business Visit Visa",
+        "ENTRY_FEE": "3 KWD",
+        "PENALTY_PER_DAY": "10 KWD per day"
+      },
+      {
+        "ENTRY_TYPE": "Multiple Entry Visa",
+        "ENTRY_FEE": "3 KWD + 1 KWD per month",
+        "PENALTY_PER_DAY": "10 KWD per day"
+      },
+      {
+        "ENTRY_TYPE": "Transit Visa",
+        "ENTRY_FEE": "2 KWD",
+        "PENALTY_PER_DAY": "10 KWD per day"
+      },
+      {
+        "ENTRY_TYPE": "Transport Drivers Visa",
+        "ENTRY_FEE": "3 KWD",
+        "PENALTY_PER_DAY": "10 KWD per day"
+      },
+      {
+        "ENTRY_TYPE": "Emergency Visa",
+        "ENTRY_FEE": "3 KWD",
+        "PENALTY_PER_DAY": "10 KWD per day"
+      }
+    ]
+  },
+  "VISA_INSTRUCTIONS": {
+    "TITLE": "Visa Instructions",
+    "RESIDENCY_ENTRY_PERMITS": {
+      "TITLE": "Residency Entry Permits",
+      "GOVERNMENT_WORK": "Entry Permit for Government Work",
+      "PRIVATE_SECTOR_WORK": "Entry Permit for Private Sector Work",
+      "DOMESTIC_WORK": "Entry Permit for Domestic Workers and Similar Cases",
+      "COMMERCIAL_ACTIVITY": "Entry Permit for Engaging in Commercial or Industrial Activity",
+      "DEPENDENT_VISA": "Entry Permit for Joining a Family Member",
+      "STUDENT_VISA": "Entry Permit for Study",
+      "TEMPORARY_GOVERNMENT_CONTRACT": "Entry Permit for Temporary Government Contract"
+    },
+    "RESIDENCY_INSTRUCTIONS": {
+      "TITLE": "Residency Visa Instructions",
+      "PASSPORT_VALIDITY": "Passport validity: No less than 1 year and 6 months",
+      "VISA_VALIDITY": "Entry permit validity: 90 days from the date of issuance",
+      "STAY_DURATION": "Stay duration: 60 days from the date of entry",
+      "CRIMINAL_RECORD": "The holder of the above-mentioned entry permits must visit the Kuwaiti embassy or consulate in their country to provide a criminal record certificate issued by the authorities of their home country, with no more than 90 days since issuance. Alternatively, if they have resided in another country for at least two years, they must provide a certificate from the authorities of that country",
+      "COMPLETE_RESIDENCY_PROCESS": "The holder of the above-mentioned entry permits must visit the General Directorate of Residency Affairs to complete the procedures for obtaining regular residency upon entering the country",
+      "ENTRY_MISMATCH": "If the details of the entry permit do not match the passport details, the entry permit will be considered invalid, and the holder will not be allowed to enter the country"
+    },
+    "VISIT_ENTRY_PERMITS": {
+      "TITLE": "Visit Entry Permits",
+      "GOVERNMENT_VISIT": "Government Visit Entry Permit",
+      "FAMILY_VISIT": "Family Visit Entry Permit",
+      "PRIVATE_VISIT": "Private Visit Entry Permit"
+    },
+    "VISIT_INSTRUCTIONS": {
+      "TITLE": "Visit Visa Instructions",
+      "PASSPORT_VALIDITY": "Passport validity: No less than 6 months",
+      "VISA_VALIDITY": "Entry permit validity: 30 days from the date of issuance",
+      "STAY_DURATION": "Stay duration: No more than 30 days from the date of entry",
+      "ENTRY_COUNT": "Number of entries: Single entry",
+      "WORK_PROHIBITED": "The visa holder is prohibited from working and must leave the country upon the expiration of the visit period"
+    },
+    "TOURISM_VISIT_INSTRUCTIONS": {
+      "TITLE": "Tourism Visa Instructions",
+      "PASSPORT_VALIDITY": "Passport validity: No less than 6 months",
+      "VISA_VALIDITY": "Entry permit validity: 30 days from the date of issuance",
+      "STAY_DURATION": "Stay duration: No more than 90 days from the date of entry",
+      "FEES_AND_PENALTIES": "Fees and penalties: Please refer to the attached table",
+      "ENTRY_COUNT": "Number of entries: Single entry"
+    },
+    "BUSINESS_VISIT_INSTRUCTIONS": {
+      "TITLE": "Business Visit Visa Instructions",
+      "PASSPORT_VALIDITY": "Passport validity: No less than 6 months",
+      "VISA_VALIDITY": "Entry permit validity: 30 days from the date of issuance",
+      "STAY_DURATION": "Stay duration: 30 days from the date of entry",
+      "FEES_AND_PENALTIES": "Fees and penalties: Please refer to the attached table",
+      "ENTRY_COUNT": "Number of entries: Single entry"
+    },
+    "MULTIPLE_ENTRY_VISIT_INSTRUCTIONS": {
+      "TITLE": "Multiple Entry Visit Visa Instructions",
+      "PASSPORT_VALIDITY": "Passport validity: No less than 6 months",
+      "VISA_VALIDITY": "Entry permit validity: No more than one year from the date of issuance (according to the date mentioned on the entry permit)",
+      "STAY_DURATION": "Stay duration: No more than 30 days from the date of each entry",
+      "ENTRY_COUNT": "Number of entries: Multiple entries"
+    },
+    "TRANSIT_VISIT_INSTRUCTIONS": {
+      "TITLE": "Transit Visa Instructions",
+      "PASSPORT_VALIDITY": "Passport validity: No less than 6 months",
+      "VISA_VALIDITY": "Entry permit validity: 30 days from the date of issuance",
+      "STAY_DURATION": "Stay duration: 7 days from the date of entry",
+      "ENTRY_COUNT": "Number of entries: Single entry",
+      "WORK_PROHIBITED": "The visa holder is prohibited from working and must leave the country upon the expiration of the visit period",
+      "TRANSIT_REQUIREMENT": "The visa holder must have a visa for the destination country they are traveling to"
+    },
+    "TRANSPORT_DRIVERS_VISIT_INSTRUCTIONS": {
+      "TITLE": "Transport Drivers Visa Instructions",
+      "PASSPORT_VALIDITY": "Passport validity: No less than 6 months",
+      "VISA_VALIDITY": "Entry permit validity: 30 days from the date of issuance",
+      "STAY_DURATION": "Stay duration: No more than 14 days from the date of entry",
+      "ENTRY_COUNT": "Number of entries: Single entry",
+      "WORK_PROHIBITED": "The visa holder is prohibited from working and must leave the country upon the expiration of the visit period"
+    },
+    "EMERGENCY_VISIT_INSTRUCTIONS": {
+      "TITLE": "Emergency Entry Visa Instructions",
+      "PASSPORT_VALIDITY": "Passport validity: No less than 6 months",
+      "VISA_VALIDITY": "Entry permit validity: 30 days from the date of issuance",
+      "STAY_DURATION": "Stay duration: 7 days from the date of entry",
+      "ENTRY_COUNT": "Number of entries: Single entry",
+      "WORK_PROHIBITED": "The visa holder is prohibited from working and must leave the country upon the expiration of the visit period"
+    }
+  },
+  "FAQ": {
+    "TITLE": "Frequently Asked Questions",
+    "INTRO": "Welcome to the Kuwait Visa FAQ section. Our goal is to provide answers to common questions regarding the visa application process, requirements, and other related topics. If your question is not answered here, please feel free to contact our customer support team.",
+    "SECTION_1": {
+      "TITLE": "Visa-Related",
+      "Q1": "What types of visas are available for entry into Kuwait?",
+      "A1": "We offer various types of visas, including:<br>- Tourist Visa: For visitors traveling to Kuwait for tourism<br>- Family Visit Visa: For those visiting family members residing in Kuwait<br>Please ensure that you select the appropriate visa type based on your purpose of visit",
+      "Q2": "What are the requirements for obtaining a Kuwait tourist visa?",
+      "A2": "The requirements vary depending on your nationality. Generally, you will need:<br>- A valid passport<br>- A recent passport-sized photo<br>- A confirmed round-trip flight ticket<br>Additional documents may be required based on the type of visa",
+      "Q3": "Can I apply for a visa upon arrival in Kuwait?",
+      "A3": "Yes, some nationalities are eligible for a visa upon arrival. Please check the list of eligible countries on our website to confirm if you qualify",
+      "Q4": "How long is the tourist visa valid?",
+      "A4": "Tourist visas are valid for 30 days from the date of issue, with a stay of up to 90 days from the date of entry",
+      "Q5": "Can I extend my tourist visa?",
+      "A5": "Visa extensions are subject to Kuwait’s immigration regulations. You should check with local authorities in Kuwait to determine if an extension is possible"
+    },
+    "SECTION_2": {
+      "TITLE": "Application Process",
+      "Q1": "How do I apply for a Kuwait visa online?",
+      "A1": "You can apply through our website by uploading the required documents and paying the visa fee online. Once submitted, your application will be reviewed and processed by our team",
+      "Q2": "What documents are required to submit a visa application?",
+      "A2": "The required documents depend on the visa type and your nationality. Generally, you need:<br>- A valid passport (with at least 6 months of validity)<br>- A recent passport-sized photo that meets passport photo standards<br>- A confirmed round-trip flight ticket<br>- Hotel booking or proof of accommodation in Kuwait<br>Additional documents may be required based on the visa type",
+      "Q3": "How long does it take to process a visa application?",
+      "A3": "Processing times vary depending on the visa type and the applicant’s nationality. Tourist visas typically take between 1 and 2 business days. You will receive updates on your application status via email or mobile number",
+      "Q4": "How can I track the status of my visa application?",
+      "A4": "You can track the status of your application by logging into your account on our website. We will also send you email notifications about the status of your application",
+      "Q5": "What should I do if my application is rejected?",
+      "A5": "If your application is rejected, we will provide details about the reason for the rejection, if possible. Visa fees will not be collected unless your application has been accepted. You may submit a new application after reviewing the requirements and ensuring that all information is accurate"
+    },
+    "SECTION_3": {
+      "TITLE": "Payment and Fees",
+      "Q1": "What are the fees for submitting a Kuwait visa application?",
+      "A1": "Visa fees vary depending on the type of visa and the applicant’s nationality. The applicable fees will be displayed when you complete the online application form",
+      "Q2": "What payment methods are accepted?",
+      "A2": "We accept payment via credit card as well as other secure online payment options. All payments are processed through secure payment gateways",
+      "Q3": "Are visa fees refundable?",
+      "A3": "No, visa fees are non-refundable if your application is accepted"
+    },
+    "SECTION_4": {
+      "TITLE": "Document and Passport-Related",
+      "Q1": "What are the passport requirements?",
+      "A1": "Your passport must be valid for at least 6 months from the date of entry into Kuwait. Other travel documents are not accepted",
+      "Q2": "Do I need to submit passport photos with my visa application?",
+      "A2": "Yes, you are required to submit a recent passport-sized photo that meets passport photo standards. The photo must have a white background and be clearly recognizable",
+      "Q3": "What should I do if my passport details change after submitting the application?",
+      "A3": "If any changes occur to your passport details after submitting the application (such as renewal or information updates), please contact us immediately to update your information before issuing the visa and avoid any potential issues"
+    },
+    "SECTION_5": {
+      "TITLE": "Privacy and Security",
+      "Q1": "How is my personal data protected?",
+      "A1": "We are committed to protecting your personal data. We use advanced encryption technologies to ensure that all information you provide through the website is secure and protected. For more details, please refer to our Privacy Policy",
+      "Q2": "Will my personal data be shared with third parties?",
+      "A2": "Your data will only be shared with the relevant authorities responsible for processing your visa application (such as embassies and consulates) or with our contracted service providers who assist with the application process. We will not share your data with third parties for marketing purposes without your consent"
+    },
+    "SECTION_6": {
+      "TITLE": "Technical Support and Assistance",
+      "Q1": "What should I do if I encounter a technical issue while submitting my application?",
+      "A1": "If you experience any technical problems while using the website or submitting your application, please contact our technical support team via email. We are here to assist you",
+      "Q2": "Can I modify my application after it has been submitted?",
+      "A2": "If you need to make changes to your application after submission, please contact us as soon as possible. It may be possible to update some details before your application is processed by the relevant authorities",
+      "Q3": "How can I contact customer support?",
+      "A3": "You can reach us via the <a class='contact-link'>Contact Us</a> page, and for inquiries related to visa status, please contact support after logging in",
+      "CONCLUSION": "We hope these answers have addressed your questions. If you have any further inquiries, please do not hesitate to contact our team for further assistance"
+    }
+  },
+  "PRIVACY_POLICY": {
+    "TITLE": "Privacy Policy ",
+    "INTRO": "At Kuwait Visa, we are committed to protecting the privacy of our users and ensuring the security of their personal information. This Privacy Policy outlines how we collect, use, and safeguard the personal data you provide when using our website to obtain Kuwait visa services. We adhere to global standards in data protection, including compliance with local and international regulations regarding personal data protection.",
+    "SECTION_1": {
+      "TITLE": "1. Information We Collect",
+      "SUBSECTION_1": {
+        "TITLE": "1.1. Personal Information",
+        "CONTENT": "We collect information that you provide to us when filling out visa application forms or contacting us. This personal data may include, but is not limited to:<br>- Full name.<br>- Passport details (passport number, issuance and expiration dates, issuing country)<br>- Date of birth and nationality<br>- Contact details (email, phone number, postal address)<br>- Travel details (arrival and departure dates, purpose of visit)<br>- Any other information necessary to complete your visa application"
+      },
+      "SUBSECTION_2": {
+        "TITLE": "1.2. Non-Personal Information",
+        "CONTENT": "We also collect non-personal information automatically when you use our website, such as:<br>- IP address<br>- Browser type<br>- Pages you visit on the site<br>- Date and time of your visit<br>- Language preferences"
+      }
+    },
+    "SECTION_2": {
+      "TITLE": "2. Use of Information",
+      "SUBSECTION_1": {
+        "TITLE": "2.1. Purpose of Data Collection",
+        "CONTENT": "We use the personal information we collect for the following purposes:<br>- To process your visa application and provide related services<br>- To verify your identity and validate the information provided<br>- To communicate with you regarding your application or to send administrative updates<br>- To improve the user experience on our website and analyze performance<br>- To comply with legal and regulatory requirements related to visa applications"
+      },
+      "SUBSECTION_2": {
+        "TITLE": "2.2. Marketing and Communication",
+        "CONTENT": "We may use your contact details to send promotional offers or marketing information related to our services, provided we have obtained your prior consent. You can opt out at any time"
+      }
+    },
+    "SECTION_3": {
+      "TITLE": "3. Sharing of Information",
+      "SUBSECTION_1": {
+        "TITLE": "3.1. With Third Parties",
+        "CONTENT": "We may share your personal information with:<br>- Kuwaiti embassies and consulates, or other government agencies involved in visa processing<br>- Service providers who assist us in delivering our services (e.g., cloud computing providers, payment processors, hosting services)<br>- Third parties for compliance with laws, enforcing judicial orders, or protecting our legal rights and the rights of our users"
+      },
+      "SUBSECTION_2": {
+        "TITLE": "3.2. International Data Transfers",
+        "CONTENT": "Your personal data may be transferred to other countries for the purposes of processing or verification, in accordance with applicable data protection laws. If your data is transferred to a country outside your region, we ensure that all necessary measures are taken to protect it following appropriate security standards"
+      }
+    },
+    "SECTION_4": {
+      "TITLE": "4. Data Protection",
+      "CONTENT": "We implement strict security measures to protect your personal data from unauthorized access, illegal use, or disclosure. These measures include:<br>- Data encryption during transmission (SSL/TLS)<br>- Restricted access to data based on operational need<br>- Use of advanced security systems and monitoring technologies to protect the website from cyber threats"
+    },
+    "SECTION_5": {
+      "TITLE": "5. User Rights",
+      "SUBSECTION_1": {
+        "TITLE": "5.1. Right to Access and Correction",
+        "CONTENT": "You have the right to request access to the personal data we hold about you and to correct any inaccurate or incomplete information"
+      },
+      "SUBSECTION_2": {
+        "TITLE": "5.2. Right to Deletion",
+        "CONTENT": "You can request the deletion of your personal data if there is no legal or operational need to retain it"
+      },
+      "SUBSECTION_3": {
+        "TITLE": "5.3. Right to Object and Restrict",
+        "CONTENT": "You have the right to object to the processing of your personal data for certain purposes, or request the restriction of processing in specific circumstances"
+      }
+    },
+    "SECTION_6": {
+      "TITLE": "6. Use of Cookies",
+      "CONTENT": "We use cookies to enhance the user experience and personalize content on the website. These cookies collect information about your interaction with the site, such as the pages you visit and the activities you engage in. You can manage or disable cookies through your browser settings, but doing so may limit certain site functionalities"
+    },
+    "SECTION_7": {
+      "TITLE": "7. Data Retention",
+      "CONTENT": "We retain your personal data for as long as necessary to fulfill the purposes for which it was collected or as required by applicable laws. Once there is no legal or operational need to retain your data, we will delete it securely"
+    },
+    "SECTION_8": {
+      "TITLE": "8. Changes to the Privacy Policy",
+      "CONTENT": "We may update this Privacy Policy from time to time to reflect new legal, technological, or operational requirements. You will be notified of any significant changes via email or through a notice on our website. We encourage you to review this page periodically for updates"
+    },
+    "SECTION_9": {
+      "TITLE": "9. Contact Us",
+      "CONTENT": "If you have any questions or concerns about our Privacy Policy or how we handle your personal data, please contact us via our email:<br>"
+    },
+    "SECTION_10": {
+      "TITLE": "10. Compliance with Laws",
+      "CONTENT": "This Privacy Policy complies with local and international data protection laws, including the General Data Protection Regulation (GDPR) and other relevant regulations<br>We appreciate your trust in Kuwait Visa, and we pledge to continue working to protect your privacy and ensure the security of your personal data"
+    }
+  },
+  "TERMS_CONDITIONS": {
+    "TITLE": "Terms Of Using",
+    "INTRO": "Kindly ensure to read the Terms carefully before you start using or accessing Kuwait Visa Platform <br> With using or accessing this Platform, you acknowledge and agree to follow all mentioned Terms and Conditions, Please avoid using this Platform if you disagree with any of the below mentioned Terms and Conditions",
+    "SECTION_1": {
+      "TITLE": "1. Acceptance of Terms and Conditions",
+      "CONTENT": "By using Kuwait Visa Platform, you acknowledge that you have read, understood, and agree to follow the mentioned Terms and Conditions. <br> Please note Kuwait Visa Platform reserves the right to modify the Terms and Conditions at any time and with your continues use of the Platform after the Terms modifications will be consider as an approval from your side for the updated Terms "
+    },
+    "SECTION_2": {
+      "TITLE": "2. Use of the Platform",
+      "SUBSECTION_1": {
+        "TITLE": "2.1. Eligibility",
+        "CONTENT": "You must have reached the legal age According to the laws of the State of Kuwait"
+      },
+      "SUBSECTION_2": {
+        "TITLE": "2.2. Authorized Use",
+        "CONTENT": "You should be using Kuwait Visa Platforms for personal, non-commercial use only, you are prohibit from using the Platform for any illegal or unauthorized purposes, such as:<br>- Providing false or misleading information when submitting Visa Applications <br>- Attempting to bypass the security measures by gaining unauthorized access to the Platform's systems <br>- Using Kuwait Visa Platform to publish or transfer any viruses, Malicious Software, or Harmful Contents"
+      }
+    },
+    "SECTION_3": {
+      "TITLE": "3. User Account",
+      "SUBSECTION_1": {
+        "TITLE": "3.1. Account Creation",
+        "CONTENT": "Please note, you will be require to have an Account in order you can access to some Services in Kuwait Visa Platform <br> It will be your responsibility to maintain the confidentiality of your Account Information and Password, you will also be responsible for all the transactions done through your Account"
+      },
+      "SUBSECTION_2": {
+        "TITLE": "3.2. Information Accuracy",
+        "CONTENT": "You agree to provide accurate and complete information when submitting a Visa Application <br> Kuwait Visa Platform reserves the right to reject or cancel any applications submitted inaccurately or with misleading information"
+      }
+    },
+    "SECTION_4": {
+      "TITLE": "4. Intellectual Property",
+      "CONTENT": "All contents in Kuwait Visa Platform (Texts, Graphics, Logos, and Software) are under the property of either Kuwait Visa Platform or to content’s Providers and protected by intellectual property Laws  <br> You are prohibited from copying, modifying, distributing, or reproducing any of the Platform’s content without the permission from the organization who owns the property"
+    },
+    "SECTION_5": {
+      "TITLE": "5. External Links",
+      "CONTENT": "Kuwait Visa Platform may contain Links for External Websites that provide additional information or services <br> The provision of these links does not constitute an endorsement by us of those websites, and we aren’t responsible for their content. <br> Using these external links will be under your own responsibility"
+    },
+    "SECTION_6": {
+      "TITLE": "6. Disclaimer",
+      "SUBSECTION_1": {
+        "TITLE": "6.1. Information Accuracy",
+        "CONTENT": "We endeavor to provide accurate and up-to-date information, but we don’t guarantee the accuracy, completeness, or reliability of the provided information <br> We aren’t responsible for any errors, omissions, or out-of-date information"
+      },
+      "SUBSECTION_2": {
+        "TITLE": "6.2. Disclaimer of Guarantees",
+        "CONTENT": "We don’t provide any kind of guarantees whether express or implied regarding to Platform operating, Information, Content, Products or any Services provided through Kuwait Visa Platform <br> Using Kuwait Visa Platform will be at your own responsibility"
+      }
+    },
+    "SECTION_7": {
+      "TITLE": "7. Limitation of Liability",
+      "CONTENT": "We aren’t responsible for any direct, indirect, consequential, or incidental damages (such as, loss of data, business interruption, or loss of profits) of using Kuwait Visa platform or any of available Services in Platform"
+    },
+    "SECTION_8": {
+      "TITLE": "8. Account Termination",
+      "CONTENT": "If you violated any of mentioned Terms and Conditions, or we noticed any illegal or unauthorized activity while you are using Kuwait Visa Platform, we reserve the right to temporary suspend your Account or terminate it permanently without prior notice"
+    },
+    "SECTION_9": {
+      "TITLE": "9. Laws and Jurisdiction",
+      "CONTENT": "Kindly note, mentioned Terms and Conditions of Use is undergoing by the Law of the Kuwait State <br> Any dispute occurrence regarding to your use of Kuwait Visa Platform will be subject to jurisdiction of the courts in Kuwait"
+    },
+    "SECTION_10": {
+      "TITLE": "10. Changes to Terms of Use",
+      "CONTENT": "To meet the latest requirements of Legal, Technological, or Operational, we reserve the right to update Terms of Use from time to time"
+    },
+    "FOOTER": "Kindly insure to review the Terms of Use regularly to stay informed of any changes been applied"
+  },
+  "CONTACT_US": {
+    "TITLE": "Contact Information ",
+    "INTRO": "If you have any inquiries or need assistance regarding your visa application or any other services provided by the website, you can contact us",
+    "EMAIL": "By Email ",
+    "ADDRESS": {
+      "TITLE": "By visiting our site in Kuwait – Dajeej area",
+      "DETAILS": "General Administration of Residence Affairs - Electronic Services Department",
+      "LINK": "https://maps.app.goo.gl/Rgq7UrKPLnSbMGwL8"
+    },
+    "WORKING_HOURS": {
+      "TITLE": "Working hours",
+      "DETAILS": "The administration works 24/7 for electronic requests or inquiries via the website or email.\n\nReception of visitors on site from Sunday to Thursday, from 8:00 am to 2:00 pm (Kuwait time)"
+    },
+    "FOOTER": "We are here to assist you and will respond to your inquiries as soon as possible"
+  },
+  "VALIDATION": {
+    "REQUIRED": "Field is required",
+    "PATTERN": "Invalid pattern",
+    "MAXLENGTH": "Maximum length exceeded",
+    "MINLENGTH": "Minimum length not met",
+    "INVALID_EMAIL": "Invalid email",
+    "CONFIRM_PASSWORD_MISSMATCH": "Password and confirm password is not same",
+    "INVALID_PASSWORD_PATTERN": "Password must contain at least one uppercase letter, one number, one special character, and be at least eight characters long",
+    "PHOTO_REQUIRED": "Kindly upload the Face Photo",
+    "PASSPORT_PHOTO_REQUIRED": "Kindly upload Passport Photo",
+    "RESERVATION_PHOTO_REQUIRED": "Kindly upload the required attachments for proof of reservation",
+    "GCCRESIDENCY_PHOTO_REQUIRED": "Kindly upload your GCC Residency Certificate",
+    "RESIDENCY_PHOTO_REQUIRED": "Kindly upload your Residency Certificate",
+    "VALID_VISA_PHOTO_REQUIRED": "Kindly upload your Valid Visa Certificate",
+    "PASSPORT_ENTRY_STAMP_REQUIRED": "Kindly upload your Passport Entry Stamp Certificate",
+    "BIRTHCERT_PHOTO_REQUIRED": "Kindly upload your Birth Certificate",
+    "MARRIAGECERT_PHOTO_REQUIRED": "Kindly upload your Marriage Certificate",
+    "RELATION_CERT_PHOTO_REQUIRED": "Kindly upload your Relation Certificate",
+    "INCORRECT_CIVIL_ID_NUMBER": "Civil ID number is incorrect"
+  },
+  "ERROR_MESSAGES": {
+    "TECHNICAL_ERROR": "Technical Error",
+    "RESET_PASSWORD": "Reset Password",
+    "RESTRICT_PERMISSION": "Permission Restricted",
+    "SUCCESS_MESSAGE": "Succesfull",
+    "ERROR_MESSAGE": "Technical error occurred, please try again later ",
+    "UNAUTHORIZED_ERROR_MESSAGE": "Unauthorized",
+    "NOT_AVAILABLE": "Not Available",
+    "SERVER_ERROR_MESSAGE": "Server Error",
+    "INCORRECT_VERIFICATION_CODE": "Incorrect verification code",
+    "DEFUALT_ERROR": "An error occurred, Please try again",
+    "ACCOUNT_SWITCH_ERROR": "To switch accounts, please log out first",
+    "ACCOUNT_DOES_NOT_EXIST": "Profile not found. Please create an account with your Civil ID.",
+    "USER_ALREADY_EXISTS": "Error occurred: User already exists.",
+    "SIGN_UP_NOT_COMPLETE": "Signup not completed. Please complete the signup process to continue."
+  },
+  "SIGN_IN": {
+    "PASSWORD": "Password",
+    "FORGOT_YOUR_PASSWORD": "Forgot your password? ",
+    "CLICK_HERE": "Click here",
+    "DONT_HAVE_ACCOUNT": "Don't have an account? ",
+    "CLICK_HERE_TO_SIGN_UP": "Click here to create",
+    "LOGIN_BUTTON": "Sign-in"
+  },
+  "AUTH": {
+    "LOGIN_TITLE": "Sign-in",
+    "SIGN_UP_TITLE": "Sign-up",
+    "FORGOT_TITLE": "Forgot Password ?",
+    "KUWAIT_VISA_LOGO_LABEL": "Kuwait Visa",
+    "RESET_PASSWORD_TITLE": "Reset Password"
+  },
+  "EMAIL_VERIFICATION": {
+    "EMAIL": "Email",
+    "SEND_VERIFICATION_CODE_BUTTON": "Send Verification Code",
+    "ENTER_VERIFICATION_CODE": "Enter Verification Code",
+    "RESEND_VERIFICATION_CODE": "Resend Verification Code",
+    "VERIFY_CODE_BUTTON": "Verify Code",
+    "TIME_REMAINING": "Time Remaining",
+    "SEND_VERIFICATION_LINK_BUTTON": "Send Verification Link",
+    "VERIFICATION_LINK_SENT": "An email has been sent to your email address to reset the password"
+  },
+  "FORGOT": {
+    "CONFIRM_PASSWORD": "Confirm Password",
+    "CHANGE_PASSWORD_BUTTON": "Change Password",
+    "SUCCESS_MESSAGE": "Password changed successfully. Sign In to continue"
+  },
+  "SIGN_UP": {
+    "SURNAME": "Surname",
+    "GIVEN_NAME": "Username",
+    "COUNTRY_CODE": "Country Code",
+    "MOBILE_NUMBER": "Mobile Number",
+    "I_ACCEPT": "I accept",
+    "TERMS": "Terms",
+    "AND": "and",
+    "PRIVACY_POLICY": "Privacy Policy",
+    "SIGN_UP_BUTTON": "Sign Up",
+    "SIGN_UP_SUCCESS_MESSAGE": "Sign Up successfully. Sign In to continue"
+  },
+  "APPLICATION_LIST": {
+    "APPLICATION_LIST_TITLE": "Application List",
+    "CREATE_NEW_APPLICATION_BUTTON": "Create New Application",
+    "SUBMIT_NEW_APPLICATION_BUTTON": "New Application",
+    "SELF_APPLICATION_PENDING_WARNING": "You already have a pending self application",
+    "UPDATE_PROFILE_FOR_APPLY_VISA_WARNING": "Insufficient details for apply e-visa, Update profile and try again",
+    "UNAPPROVED_PROFILE_WARNING": "You cannot apply for an e-visa until your profile is approved by the authorities",
+    "VIEW_APPLICATION": "View Application"
+  },
+  "APPLICATION_TABLE_HEADERS": {
+    "ORDER_NUMBER": "Application ID",
+    "VISA_TYPE": "Visa Type",
+    "VISA_NUMBER": "Visa Number",
+    "PASSPORT_NUMBER": "Passport Number",
+    "NAME": "Name",
+    "REQUEST_DATE": "Request Date",
+    "STATUS": "Status",
+    "ACTION": "Action"
+  },
+  "DYNAMIC_TABLE": {
+    "PAYMENT_LINK_TITLE": "Pay now",
+    "NO_DATA": "No Data Available",
+    "DOWNLOAD": "Download",
+    "EDIT": "Edit",
+    "VIEW": "View"
+  },
+  "FAMILY_DETAILS": {
+    "ADD_FAMILY_BUTTON_LABEL": "Add Family Member",
+    "EDIT_DETAILS_LABEL": "Edit Details",
+    "DELETE": "Delete",
+    "SON": "Son",
+    "DAUGHTER": "Daughter",
+    "WIFE": "Wife",
+    "HUSBAND": "Husband",
+    "DELETE_ALERT_MESSAGE": "Are you sure with removing this person from Family Members List?",
+    "DELETE_DETAILS_SUCCESS_MESSAGE": "Family details deleted successfully",
+    "FAMILY_LIST": {
+      "TITLE": "Family Members",
+      "FAMILY_TABLE_HEADERS": {
+        "NAME": "Name",
+        "PROFILE_ID": "Profile ID",
+        "GENDER": "Gender",
+        "PASSPORT_NUMBER": "Passport Number",
+        "PASSPORT_NATIONALITY": "Nationality",
+        "RELATION": "Relation",
+        "PROFILE_STATUS": "Profile Status",
+        "ACTION": "Action"
+      }
+    },
+    "ADD_FAMILY": {
+      "TITLE": "Add Family",
+      "EDIT_TITLE": "Edit Family",
+      "SUBMIT_BUTTON_LABEL": "Submit",
+      "ADD_SUBMIT_BUTTON_LABEL": "Add",
+      "UPDATE_SUBMIT_BUTTON_LABEL": "Save",
+      "ADD_SUCCESS_MESSAGE": "Family member added successfully",
+      "UPDATE_SUCCESS_MESSAGE": "Family details updated successfully",
+      "DOMESTIC_WORKER_WARNING_MESSAGE": "Only GCC resident can apply for Domestic Workers"
+    }
+  },
+  "APPLICATION_STATUS": {
+    "NEW": "New",
+    "PROCESSING": "Processing",
+    "ACCEPTED": "Accepted",
+    "ONHOLD": "On Hold",
+    "REJECTED": "Rejected",
+    "REQUIRE-PAYMENT": "Waiting for Payment",
+    "PENDING": "Pending",
+    "VISA_EXPIRE": "Visa Expired",
+    "CANCEL": "Cancelled",
+    "INQUEUE": "InQueue",
+    "REQUEST-UPDATE": "Request Update",
+    "UPDATED": "Updated"
+  },
+  "PROFILE_STATUS": {
+    "NEW": "New",
+    "PENDING": "Pending",
+    "REQUEST-UPDATE": "Request Update",
+    "UPDATED": "Updated",
+    "APPROVE": "Active",
+    "REJECT": "Reject",
+    "TEMP-SUSPEND": "Temp Suspend",
+    "DEACTIVATE": "Deactivate",
+    "PROCESSING": "Processing",
+    "INQUEUE": "InQueue",
+    "DELETE-REQUEST": "Delete Under Process"
+  },
+  "FOOTER": {
+    "DEV": "Developed and Operated By ",
+    "DEV_2": "Information Systems Directorate  ",
+    "KUWAIT": "State of Kuwait",
+    "KUWAIT_VISA_PLATFORM": "Kuwait Visa Platform",
+    "TERMS_OF_USE": "Terms of Use",
+    "PRIVACY_POLICY": "Privacy Policy",
+    "FAQ": "FAQ",
+    "CONTACT_US": "Contact Us",
+    "SUPPORT": "Support",
+    "INFORMATION": "Information",
+    "ABOUT_KUWAIT": "About Kuwait",
+    "TERMS_CONDITIONS": "Terms and Conditions",
+    "VISA_DESCRIPTION": "Visa Type",
+    "TOURIST_VISA_INSTRUCTIONS": "Visa Instructions",
+    "SOCIAL_MEDIA": {
+      "TWITTER": "Twitter",
+      "INSTAGRAM": "Instagram",
+      "YOUTUBE": "YouTube",
+      "FACEBOOK": "Facebook"
+    },
+    "DEVELOPMENT_OPERATION": "Development and Operation",
+    "GENERAL_ADMIN_INFO_SYSTEMS": "General Administration of Information Systems",
+    "MOI": "Ministry of Interior",
+    "STATE_OF_KUWAIT": "State of Kuwait",
+    "ALL_RIGHTS_RESERVED": "All rights reserved © 2024"
+  },
+  "HEADER": {
+    "TITLE": "Kuwait Visa",
+    "LOGOUT": "Sign-out",
+    "TRACK_APPLICATIONS": "Track Applications",
+    "PROFILE": "Profile",
+    "LOGIN": "Sign-in",
+    "SWITCH_LANGUAGE": "Switch to Arabic",
+    "CHANGE_THEME": "Switch Theme",
+    "ENGLISH": "English",
+    "ARABIC": "Arabic",
+    "DARK_MODE": "Dark Mode",
+    "LIGHT_MODE": "Light Mode",
+    "BETA_VERSION": "Beta Version",
+    "VISA_APPLICATIONS": "Visa Applications",
+    "KUWAIT": "Kuwait",
+    "VISA": "Visa",
+    "STEPS": {
+      "HEADING": "Apply for your visa in a few simple steps..",
+      "STEP_1": "Create your account",
+      "STEP_2": "Complete your profile",
+      "STEP_3": "Submit your visa application",
+      "STEP_4": "Track real-time updates "
+    },
+    "LEARN_MORE": "Learn more about Kuwait..",
+    "DISCOVER_MORE": "Discover more",
+    "SEARCH": "Search",
+    "NO_ITEMS_FOUND": "No items found"
+  },
+  "MOBILE_MENU": {
+    "LOGOUT": "Sign-out",
+    "TRACK_APPLICATIONS": "Track Applications",
+    "PROFILE": "Profile",
+    "SWITCH_LANGUAGE": "English"
+  },
+  "PROFILE": {
+    "EDIT_EMAIL_TITLE": "Update Email",
+    "PROFILE_TITLE": "Profile Details",
+    "FAMILY_PROFILE_TITLE": "Family Profile Details",
+    "PROFILE_DATA_TITLE": "Personal Data",
+    "CONTACT_INFO_TITLE": "Contact Information",
+    "PAYEMENT_INFO_TITLE": "Payment Information",
+    "UPDATE_BUTTON": "Update",
+    "CANCEL_BUTTON": "Cancel",
+    "PHONE_NUMBER": "Phone Number",
+    "PREFERRED_LANGUAGE": "Preferred Language",
+    "DATE_OF_BIRTH": "Date of Birth",
+    "GENDER": "Gender",
+    "DOCUMENTS": "Documents",
+    "NATIONALITY": "Nationality",
+    "PROFILE_UPDATE_SUCCESS_MESSAGE": "Profile updated successfully",
+    "FAMILY_PROFILE_UPDATE_SUCCESS_MESSAGE": "You've successfully added the Person to Family Members List",
+    "VIEW_FAMILY_BUTTON_LABEL": "View Family Details",
+    "MODAL_BUTTON_TITLE": "Ok",
+    "UNAPPROVED_PROFILE_UPDATION_WARNING": "Your profile is currently under verification. You will be able to modify it once it has been approved by the authorities",
+    "PENDING_PROFILE_UPDATION_WARNING": "Your profile update is being processed and will be completed shortly",
+    "UPDATE_PROFILE_REDIRECT_BUTTON": "Update Personal Profile",
+    "UNMARRIED_ADD_FAMILY_WARNING": "Only married individuals are allowed to add their family members",
+    "PROFILE_STATUS_REJECTED_WARNING_MESSAGE": "Your profile has been rejected by the authorities",
+    "PROFILE_STATUS_TEMP_SUSPENDED_WARNING_MESSAGE": "Your profile has been temporarily suspended by the authorities",
+    "PROFILE_STATUS_DEACTIVE_WARNING_MESSAGE": "Your profile is inactive",
+    "PROFILE_STATUS_UPDATE_REQUIRED_WARNING_MESSAGE": "Authorities require additional updates to your profile",
+    "PROFILE_STATUS_INCOMPLETE_WARNING_MESSAGE": "Please update your Personal Profile in order you can use Kuwait Visa Platform Services",
+    "PROFILE_HOLDER_STATUS_NOT_APPROVED_WARNING_MESSAGE": "The account holder's profile is inactive. You cannot proceed further",
+    "KUWAIT_RESIDENT_LABEL": "Are you currently a Citizen or Resident in Kuwait ? ",
+    "CIVIL_ID_NOT_ELIGIBLE": "You aren't eligible to apply for Family Visit Visa",
+    "SPONSOR_CIVIL_ID_NOT_ELIGIBLE": "Your sponsor is not eligible for family visa sponsorship",
+    "SPONSOR_NOT_ELIGIBLE_TO_SPONSOR_RELATION": "Your sponsor is not eligible to sponsor your relationship",
+    "ADD_DETAILS": {
+      "SELF_TITLE": "Add Profile Details",
+      "OTHER_TITLE": "Add Relation Details"
+    },
+    "EDIT_DETAILS": {
+      "SELF_TITLE": "Edit Profile Details",
+      "OTHER_TITLE": "Edit Relation Details",
+      "NO_CHANGE_WARNING": "Nothing to update"
+    }
+  },
+  "VISA_DESCRIPTION": {
+    "TITLE": "Visa Type ",
+    "GOVERNMENT_VISA": {
+      "TITLE": "Government Visa",
+      "CONTENT": "A government visa is granted to officials or government employees who visit the country for official government purposes, such as participating in international conferences or bilateral meetings between governments. It is issued upon an official invitation from the host government and is subject to certain diplomatic protocols"
+    },
+    "BUSINESS_VISA": {
+      "TITLE": "Business Visa",
+      "CONTENT": "This visa is issued to individuals visiting the country for business purposes such as attending meetings, conferences, or establishing partnerships with local companies. A local company is required to apply for a business visit with proof of the business purpose of the visit"
+    },
+    "FAMILY_VISA": {
+      "TITLE": "Family Visa",
+      "CONTENT": "This visa is granted to individuals who wish to visit their families residing in the State of Kuwait. This visa usually requires a family member residing in the host country to submit a request to visit their family members. Visits may include family gatherings or personal occasions, depending on the terms and conditions"
+    },
+    "TOURIST_VISA": {
+      "TITLE": "Tourist Visa",
+      "CONTENT": "This visa is issued to individuals who wish to visit the State of Kuwait for the purpose of tourism and entertainment. The tourist visa allows its holder to visit tourist attractions and explore the country for a specified period"
+    },
+    "KHALEEJI_26_VISA": {
+      "TITLE": "Khaleeji 26 ",
+      "CONTENT": "This visa is issued to individuals who wish to visit the State of Kuwait for the purpose of attending the Gulf Cup (Khaleeji Zain 26) matches"
+    }
+  },
+  "VISA_DETAILS": {
+    "TITLLE": "Select the type of visa you wish to obtain",
+    "TITLE_NEW": "Select the type of visa you wish to apply to visit Kuwait",
+    "KHALEEJI_WARNING_MESSAGE": "The visa is considered canceled if a ticket to attend the match is not purchased within 48 hours from the date of visa issuance",
+    "KHALEEJI_NOT_AVAILABLE_MESSAGE": "We're sorry, the page you're looking for is not available currently!",
+    "KHALEEJI_NOT_AVAILABLE_REDIRECT_BUTTON": "Redirect to Visa Portal",
+    "KHALEEJI_CREATE_VISA_NOT_AVAILABLE_MESSAGE": "Visa type is not available",
+    "SUB_TITLE": "To enter the State of Kuwait, whether for visit or work",
+    "ELIGIBILITY_MESSAGE": "Applicant is eligible for applying visa on arrival or online e-visa",
+    "NON_ELIGIBILITY_MESSAGE": "Applicant is not eligible for applying online e-visa, However you can apply through Kuwait embassy",
+    "NOT_ELIGIBILITY_MESSAGE": "Applicant is not eligible for applying e-visa",
+    "ELIGIBLE_ACTION_BUTTON": "Apply Now",
+    "KHALEEJI_YEMEN_WARNING_MESSAGE": "Dear Yemeni fans, please coordinate with the Embassy of the Republic of Yemen in the State of Kuwait before submitting an application for a visa (Khaleeji Zain 26)",
+    "VISA_TYPE": {
+      "WORK": "Business",
+      "FAMILY": "Family",
+      "TOURIST": "Tourist",
+      "GOVERNMENT": "Government"
+    },
+    "FORM_FIELDS": {
+      "NATIONALITY_LABEL": "Select Nationality"
+    },
+    "VISA_ISSUED_LABEL": "Visas issued in"
+  },
+  "TOURIST_VISA_INSTRUCTIONS": {
+    "TITLE": "Kuwait Tourist Visa Instructions",
+    "VALIDITY": {
+      "TITLE": "1. Visa Validity:",
+      "CONTENT": "The tourist visa is valid for one month from the date of issuance"
+    },
+    "ENTRY_TYPE": {
+      "TITLE": "2. Type of Entry:",
+      "CONTENT": "The visa allows for a single entry only"
+    },
+    "DURATION_OF_STAY": {
+      "TITLE": "3. Duration of Stay:",
+      "CONTENT": "Visa holders can stay in Kuwait for a maximum of three months from the date of entry"
+    },
+    "FEES": {
+      "TITLE": "4. Fees:",
+      "CONTENT": "The tourist visa fee is 3 Kuwaiti Dinars. (The fee may vary depending on the visitor’s nationality)"
+    },
+    "REQUIREMENTS": {
+      "TITLE": "5. Requirements:",
+      "CONTENT": "Valid Passport with a minimum validity of six months from the date of entry into Kuwait. The visitor must not have any security restrictions preventing entry or exit from the country. Nationals of eligible countries can obtain the visa either through the official website or upon arrival at Kuwait International Airport"
+    },
+    "ELIGIBLE_COUNTRIES": {
+      "TITLE": "6. Countries Eligible for E-Visa or Visa on Arrival:",
+      "CONTENT": "The list of countries includes: Spain, Germany, Andorra, Ukraine, Ireland, Iceland, Australia, Estonia, Portugal, Czech Republic, Denmark, Sweden, Vatican, United Kingdom, Norway, Austria, United States of America, Japan, Greece, Italy, Belgium, Bulgaria, Bhutan, Brunei, Poland, Turkey, People's Republic of China, Hong Kong, Hungary, Georgia, Romania, San Marino, Slovakia, Slovenia, Singapore, Switzerland, Serbia, France, Finland, Cyprus, Croatia, Cambodia, Canada, South Korea, Latvia, Laos, Lithuania, Luxembourg, Liechtenstein, Malta, Malaysia, Monaco, New Zealand, Netherlands"
+    },
+    "GCC_PROFESSIONS": {
+      "TITLE": "7. Eligible Professions for GCC Residents:",
+      "CONTENT": "These include: Doctors, pharmacists, lawyers, engineers, consultants, judges and prosecutors, university professors, journalists and media professionals, pilots, systems analysts, computer programmers, managers, businessmen, members of the diplomatic corps, owners, managers, and representatives of companies and commercial institutions"
+    },
+    "REQUIRED_DOCUMENTS": {
+      "TITLE": "8. Required Documents:",
+      "CONTENT": "Copy of the passport. Copy of the GCC residency for residents of GCC countries, clearly indicating the profession. Confirmed travel ticket. Hotel reservation. Recent face photo"
+    },
+    "OVERSTAY_PENALTY": {
+      "TITLE": "9. Overstay Penalty:",
+      "CONTENT": "Visitors who overstay their visa will be subject to a fine of 10 Kuwaiti Dinars per day, and they may be subject to a re-entry ban"
+    },
+    "CONCLUSION": "Please ensure all requirements are met and documents are submitted accurately to avoid delays in obtaining the visa"
+  },
+  "ABOUT_KUWAIT": {
+    "TITLE": "About Kuwait",
+    "KUWAIT": {
+      "TITLE": "Kuwait",
+      "SUBTITLE": "Kuwait",
+      "DESCRIPTION": "Kuwait is a perfect blend of rich heritage and modernity, making it an unforgettable destination for tourists from all over the world"
+    },
+    "ANCIENT_HISTORY": {
+      "TITLE": "History",
+      "SUBTITLE": "Ancient History",
+      "DESCRIPTION": "Visitors can explore the Kuwait National Museum and the Sadu House to learn about traditional heritage and arts, and visit Failaka Island which has archaeological sites dating back thousands of years"
+    },
+    "MODERNITY": {
+      "TITLE": "Modernity",
+      "SUBTITLE": "Modern Lifestyle",
+      "DESCRIPTION": "Kuwait offers modernity while providing world-class shopping and entertainment experiences at places like The Avenues Mall, and iconic landmarks like the Kuwait Towers offering stunning views of the Gulf"
+    },
+    "POPULAR_DISH": {
+      "TITLE": "Popular Dish",
+      "SUBTITLE": "Traditional Cuisine",
+      "DESCRIPTION": "Kuwaiti cuisine is famous for various traditional dishes and desserts, with rice being a staple in most main courses such as the famous Zubaidi, Marabyan, and Machboos"
+    },
+    "LANGUAGE": {
+      "TITLE": "Language",
+      "SUBTITLE": "Official Language",
+      "DESCRIPTION": "Arabic is the official language in Kuwait, while English is the second most widely used language"
+    },
+    "RELIGIOUS": {
+      "TITLE": "Religious",
+      "SUBTITLE": "Religion",
+      "DESCRIPTION": "Islam is the state religion, and many non-Muslims live in Kuwait, freely practicing their religious rituals"
+    },
+    "WEATHER": {
+      "TITLE": "Weather",
+      "SUBTITLE": "Climate",
+      "DESCRIPTION": "Kuwait has a desert climate, which is hot and dry in summer, and tends to be cold in winter with occasional rain, ranging from light to heavy"
+    },
+    "CURRENCY": {
+      "TITLE": "Currency",
+      "SUBTITLE": "Kuwaiti Dinar",
+      "DESCRIPTION": "The Kuwaiti Dinar (KWD) is the currency of Kuwait, equivalent to approximately 3 USD / EUR, and is known as one of the world's most stable currencies"
+    }
+  },
+  "TERMS": {
+    "TITLE": "Terms And Conditions  ",
+    "INTRO": "Please read the terms and conditions carefully before applying for a visa:",
+    "SECTION_1": {
+      "TITLE": "Passport Validity and GCC Residence",
+      "CONTENT": "The applicant's passport must be valid for at least six months from the date of entry into Kuwait. GCC residence must be valid for 6 months from the date of entry"
+    },
+    "SECTION_2": {
+      "TITLE": "Proper Use of the Visa",
+      "CONTENT": "The visa is valid for single entry only and must be used within its one-month validity from the date of issuance"
+    },
+    "SECTION_3": {
+      "TITLE": "Duration of Stay",
+      "CONTENT": "The maximum allowed stay for the visa holder is three months from the date of entry"
+    },
+    "SECTION_4": {
+      "TITLE": "Payment of Fees",
+      "CONTENT": "Visa fees vary depending on the applicant’s nationality. The required fees must be paid at the time of application and are non-refundable"
+    },
+    "SECTION_5": {
+      "TITLE": "Providing Accurate Information",
+      "CONTENT": "The applicant commits to providing accurate and complete information throughout the application process"
+    },
+    "SECTION_6": {
+      "TITLE": "Security Restrictions",
+      "CONTENT": "The applicant must not have any security restrictions preventing entry to or exit from Kuwait"
+    },
+    "SECTION_7": {
+      "TITLE": "Online Application",
+      "CONTENT": "Applications must be submitted through the official website only. The applicant is responsible for tracking the status of their application"
+    },
+    "SECTION_8": {
+      "TITLE": "Required Documents",
+      "CONTENT": "Applicants must upload the required documents, including passport copy, face photo, confirmed travel ticket, and hotel reservation"
+    },
+    "SECTION_9": {
+      "TITLE": "Cancellation of Application or Visa",
+      "CONTENT": "Kuwaiti authorities reserve the right to reject or cancel the application or visa at any time, even after issuance, without providing reasons"
+    },
+    "SECTION_10": {
+      "TITLE": "Agreement to Terms and Conditions",
+      "CONTENT": "By submitting the visa application, the applicant agrees to comply with all laws and regulations in Kuwait and undertakes not to exceed the authorized duration of stay"
+    },
+    "SECTION_11": {
+      "TITLE": "Fines",
+      "CONTENT": "In the event of exceeding the permitted stay, a fine of 10 Kuwaiti Dinars per day will be imposed, and the visitor may be banned from entering Kuwait in the future"
+    },
+    "FOOTER": "By submitting the application, the applicant confirms that they have read and agreed to all the terms and conditions outlined above"
+  },
+  "VISA_FEES": {
+    "TITLE": "Visa Fees",
+    "HEADERS": {
+      "NUMBER": "",
+      "NATIONALITY": "Nationality",
+      "FEE": "Fee"
+    },
+    "ROWS": {
+      "1": {
+        "NATIONALITY": "Jordan",
+        "FEE": "Exempt"
+      },
+      "2": {
+        "NATIONALITY": "Algeria",
+        "FEE": "Exempt"
+      },
+      "3": {
+        "NATIONALITY": "Sweden",
+        "FEE": "Exempt"
+      },
+      "4": {
+        "NATIONALITY": "Iraq",
+        "FEE": "Exempt"
+      },
+      "5": {
+        "NATIONALITY": "Palestine",
+        "FEE": "Exempt"
+      },
+      "6": {
+        "NATIONALITY": "Morocco",
+        "FEE": "Exempt"
+      },
+      "7": {
+        "NATIONALITY": "Norway",
+        "FEE": "Exempt"
+      },
+      "8": {
+        "NATIONALITY": "United States of America",
+        "FEE": "Exempt"
+      },
+      "9": {
+        "NATIONALITY": "Italy",
+        "FEE": "Exempt"
+      },
+      "10": {
+        "NATIONALITY": "United Kingdom",
+        "FEE": "Exempt"
+      },
+      "11": {
+        "NATIONALITY": "Turkey",
+        "FEE": "Exempt"
+      },
+      "12": {
+        "NATIONALITY": "Tunisia",
+        "FEE": "Exempt"
+      },
+      "13": {
+        "NATIONALITY": "Syria",
+        "FEE": "Exempt"
+      },
+      "14": {
+        "NATIONALITY": "Lebanon",
+        "FEE": "Exempt"
+      },
+      "15": {
+        "NATIONALITY": "Libya",
+        "FEE": "Exempt"
+      },
+      "16": {
+        "NATIONALITY": "South Korea",
+        "FEE": "Exempt"
+      },
+      "17": {
+        "NATIONALITY": "Egypt",
+        "FEE": "9 Kuwaiti Dinars"
+      },
+      "OTHERS": {
+        "NATIONALITY": "Others",
+        "FEE": "3 Kuwaiti Dinars"
+      }
+    }
+  },
+  "APPLICATION_FLOW": {
+    "NEW": "Submitted Application Status",
+    "PROCESSING": "Application Processing Status",
+    "RESULT": "Request Result"
+  },
+  "DASHBOARD": {
+    "APPLY_FOR_VISA": "Apply for a visa with easy steps...",
+    "RECEIVE_NOTIFICATION": "Receive a notification about your application status in just a few minutes!",
+    "LOGIN": "Sign-in",
+    "NO_ACCOUNT": "Don't have an account?",
+    "CREATE_ACCOUNT": "Sign-up Now"
+  },
+  "TILE3": {
+    "BETTER_EXPERIENCE": "To check the visa status",
+    "DOWNLOAD_APP": "Download Kuwait Visa App",
+    "AVAILABLE_ON": "Available on iPhone and Android stores"
+  },
+  "VISA_TYPE": {
+    "TOURIST": "Tourist",
+    "FAMILY": "Family Visit"
+  },
+  "CREATE_VISA": {
+    "IMAGE_UPLOAD_STATUS": {
+      "IMAGE_UPLOAD_INFO": "The file must be in jpeg, jpg or png format",
+      "PDF_UPLOAD_INFO": "The file must be in pdf format",
+      "IMAGE_OR_PDF_INFO": "The file must be in pdf or jpeg, jpg or png format",
+      "IMAGE_OR_PDF_MAX_SIZE": "The file size should not exceed 2MB for JPEG, JPG, or PNG formats, and should not exceed 5MB for PDF format",
+      "PDF_MAX_SIZE_VALIDATION": "The uploaded file size shouldn't exceed 5 MB ",
+      "IMAGE_UPLOAD_SIZE": "The file size should not exceed 2MB",
+      "IMAGE_UPLOAD_SUCCESS": "Image Uploaded Successfully",
+      "IMAGE_UPLOAD_FAIL": "Please Upload Your Profile Photo below 2MB",
+      "IMAGE_COMPRESS_FAIL": "Please Upload Your Profile Photo with good quality",
+      "IMAGE_UPLOAD_PHOTO_FAIL": "Please Upload Your Profile Photo Clearly",
+      "PASSPORT_UPLOAD_FAIL": "Please Upload Passport with Good Quality",
+      "PASSPORT_EXISTING": "There is an active request for the passport",
+      "PASSPORT_RESTRICTED": "The applicant has been banned for violating the Terms and Conditions of using Kuwait Visa Portal.. Contact customer support for further assistance",
+      "EXPIRY-DATE-VALIDATION": "Passport Expiry date is Less than 6 months",
+      "PASSPORT-NATIONALITY-MISMATCH": "Mismatch found between selected nationality and uploaded passport details",
+      "SELF-APPLICANT-AGEVALIDATE": "Users under the age of 18 cannot apply as independents",
+      "PASSPORT-MRZ-FAILED": "Passport MRZ could not be detected!, Please try again",
+      "PASSPORT-CLEAR-FAILED": "Please Upload Passport Clearly!",
+      "PASSPORT-MRZ-CODE-FAILED": "The MRZ data at the bottom of the first page of the passport must be clear",
+      "PASSPORT-DOCUMENT-CODE-FAILED": "Passport Document Code Not Found",
+      "PASSPORT-DIGIT-CODE-FAILED": "Passport Check Digit Not Match!, Please try again",
+      "PASSPORT-DOB-CODE-FAILED": "Date of Birth Check Digit Not Match!, Please try again",
+      "PASSPORT-EXPIRE-DIGIT-FAILED": "Expire Check Digit Not Match!, Please try again",
+      "PASSPORT-NETWORK-FAILED": "Please try again",
+      "PASSPORT_NOT_CLEAR": "Please upload a clear passport",
+      "CHOOSE_FILE": "Choose File",
+      "EXAMPLE": "Example",
+      "UPLOAD_FILE": "Uploaded File"
+    },
+    "ACCOMODATION_INFO": {
+      "ACCOMODATION_BOOKING_LABEL": "Where you will be staying in Kuwait ?",
+      "BOOKED_ACCOMODATION_RADIO_LABEL": "Booked Accomodation",
+      "HOSTED_BY_FRIEND_RADIO_LABEL": "Hosted By a Friend",
+      "STAYING_WITH_DEPENDENT": "With the Sponsor",
+      "START_DATE": "Start Date",
+      "END_DATE": "End Date",
+      "FROM_TO_DATE": "Duration of Stay",
+      "UPLOAD_ACCOMODATION_PHOTO_LABEL": "Upload Proof of Reservation",
+      "UPLOAD_ACCOMODATION_PHOTO_TYPE": "Upload jpeg or jpg only",
+      "UPLOAD_ACCOMODATION_PHOTO_SIZE": "Maximum size: 2MB",
+      "ACCOMODATION_LOCATION": "Accomodation Location",
+      "BOOKED_STATUS": "Booking Status",
+      "EMERGENCY_NAME": "Emergency Name",
+      "EMERGENCY_NO": "Emergency Number",
+      "ENTRY_TYPE_LABEL": "Type of Visit",
+      "MULTIPLE_ENTRY": "Multiple Visit",
+      "SINGLE_ENTRY": "Single Visit",
+      "PERIOD_OF_STAY_LABEL": "Duration",
+      "PERIOD_OF_STAY": {
+        "1_MONTH_LABEL": "1 Month",
+        "2_MONTH_LABEL": "2 Month",
+        "3_MONTH_LABEL": "3 Month",
+        "6_MONTH_LABEL": "6 Month",
+        "12_MONTH_LABEL": "12 Month"
+      },
+      "ENTRY_TYPE_WARNING": "The duration of stay in the country is determined based on the type of visa for each visit"
+    },
+    "CONTACT_INFO": {
+      "COUNTRY_CODE": "Country Code",
+      "MOBILE_NO": "Mobile No",
+      "EMERGENCY_CONTACT": "Emergency Contact No",
+      "EMERGENCY_CONTACT_NAME": "Emergency Contact Name",
+      "SOCIAL_ACCOUNT": "Social Account",
+      "SOCIAL_ACCOUNT_ID": "ID/Account Name",
+      "QUERY_LABEL": "What's your enquiry?"
+    },
+    "MARITAL_STATUS": {
+      "SELECT": "Select",
+      "UNKNOWN": "Unknown",
+      "Married": "Married",
+      "UnMarried": "Single",
+      "widower": "Widower",
+      "bachelor": "Bachelor",
+      "divorced": "Divorced"
+    },
+    "CREATE_ViSA_TITLE": "Apply Visa",
+    "PREVIOUS_BUTTON": "Previous",
+    "NEXT_BUTTON": "Next",
+    "SUBMIT_BUTTON": "Submit",
+    "BACK_BUTTON": "Back",
+    "CANNOT_PROCEED_MESSAGE": "You are not allowed to proceed further",
+    "NATIONALITY_NOT_ELIGIBLE_MESSAGE": "Applicant's Nationality is not eligible for applying e-visa",
+    "OCCUPATION_NOT_ELIGIBLE_MESSAGE": "Applicant's Occupation is not eligible for applying e-visa",
+    "RELATION_NOT_ELIGIBLE_MESSAGE": "Applicant's Relation is not eligible for applying e-visa",
+    "NATIONALITY_SPONSOR_NOT_ELIGIBLE_MESSAGE": "Please Update Your CivilId in your Profile to Authenticate your Kuwait Mobile Id",
+    "NATIONALITY_RELATION_NOT_ELIGIBLE_MESSAGE": "Applicant's Sponsor is not Eligible to Apply Visa for You",
+    "APPLICANT_TYPE_LABEL": "Applying For",
+    "APPLICANT_PASSPORT_NUMBER_LABEL": "Passport Number",
+    "APPLICANT_NATIONALITY_LABEL": "Nationality",
+    "VISA_AMOUNT_LABEL": "Visa Fee",
+    "FAMILY_NATIONALITY_AND_PASSPORT_NATIONALITY_MISSMATCH_WARNING": "Nationality entered not matching with uploaded passport nationality, edit nationality or change passport",
+    "FAMILY_PASSPORT_NO_AND_PASSPORT_NO_MISSMATCH_WARNING": "Passport number entered not matching with uploaded passport number, edit passport number or change passport",
+    "FAMILY_GENDER_AND_PASSPORT_GENDER_MISSMATCH_WARNING": "Gender added in the family details not matching with uploaded passport gender, update family details or change passport",
+    "GCC_DOMESTIC_WORKER_WARNING_MESSAGE": "Only GCC resident can apply for domestic worker, change relation and try again",
+    "WIZARD_TITLE": {
+      "SELECT_TYPE": "Select Visa Type",
+      "SELECT_GCC_INFORMATION": "Select GCC Information",
+      "OTHER_INFORMATION": "Other Information",
+      "PASSPORT_INFORMATION": "Passport Information",
+      "PASSPORT_PHOTO": "Passport and Face Photo",
+      "KUWAIT_RESIDENCE_ADDRESS": "Previous Visit or Residence in Kuwait",
+      "ACCOMODATION": "Residence address in Kuwait",
+      "CONTACT_INFORMATION": "Contact Information",
+      "CIVIL_ID_INFORMATION": "Civil ID Information",
+      "BASIC_INFORMATION": "Basic Information",
+      "REVIEW": "Review",
+      "SUBMIT": "Submit"
+    },
+    "PASSPORT_TYPE": {
+      "NAUTICAL": "Nautical",
+      "EMERGENCY_TRAVEL": "Emergency travel document",
+      "NORMAL": "Normal",
+      "PRIVATE": "Private",
+      "DIPLOMAT": "Diplomat"
+    },
+    "MESSAGES": {
+      "NOT_ELIGIBLE": "Applicant is not eligible",
+      "INVALID_FILE_TYPE_AND_SIZE": "File must be a jpeg image and between 500KB and 2MB in size",
+      "RE_UPLOAD_PASSPORT": "Please re-upload the passport again",
+      "NOT_ELIGIBLE_CONTACT_SUPPORT": "Applicant is not eligible. Contact customer support for further assistance"
+    },
+    "NATIONALITY_CHECK": {
+      "NATIONALITY_LABEL": "Select Nationality",
+      "ARE_YOU_GCC_LABEL": "Are you a GCC Resident?",
+      "NO": "No",
+      "YES": "Yes",
+      "REDIRECT_TO_PROFILE": "Update Profile",
+      "SELECT_GCC_COUNTRY_LABEL": "Select Country",
+      "SELECT_REGION_LABEL": "Do you have",
+      "VISA_TYPE_LABEL": "Visa Type",
+      "VISA_MONTH_TYPE_LABEL": "Visiting Duration",
+      "CHECK_ELIGIBILITY_BUTTON": "Check Eligibility",
+      "CHECK_ELIGIBILITY_NEXT_BUTTON": "NEXT",
+      "NATIONALITY_ELIGIBILITY_FAIL": "Applicant is not Eligible to Proceed",
+      "NATIONALITY_PASSPORT_ELIGIBILITY_FAIL": "Your Passport has been Expired. Please update your Renewed Passport in Profile"
+    },
+    "APPLICATION_INFO": {
+      "PASSPORT_TYPE_LABEL": "PassportType",
+      "RELIGION_LABEL": "Religion",
+      "UPLOAD_PERSONAL_PHOTO_LABEL": "Personal Photo",
+      "UPLOAD_PERSONAL_PHOTO_TYPE": "Upload jpeg or jpg only",
+      "UPLOAD_PERSONAL_PHOTO_SIZE": "Maximum size: 2MB",
+      "UPLOAD_PASSPORT_PHOTO_LABEL": "The first page of the passport",
+      "UPLOAD_PASSPORT_PHOTO_TYPE": "Upload jpeg or jpg only",
+      "UPLOAD_OTHER_PASSPORT_PAGE": "Additional data page of the passport",
+      "UPLOAD_PASSPORT_PHOTO_SIZE": "Maximum size: 2MB",
+      "INFORMATION_GENUINITY_WARNING_MESSAGE": "If your details are being reflected incorrectly, it will be corrected by the authorities. No further action is required"
+    },
+    "CIVIL_ID_INFO": {
+      "CIVIL_ID_NO": "Civil Id No",
+      "CIVIL_ID_EXPIRE": "Civil Id Expiring Date",
+      "GENDER": "Gender",
+      "FULL_NAME_AR": "Name",
+      "FULL_NAME_EN": "Name",
+      "NATIONALITY_AR": "Nationality",
+      "NATIONALITY_EN": "Nationality",
+      "DATE_OF_BIRTH": "Date of Birth",
+      "CIVIL_ID_AUTHENTICATION_FAILED": "Authentication timed out. Please try again",
+      "CIVIL_ID_AUTHENTICATION_REJECTED": "Authentication request has been rejected",
+      "CIVIL_ID_NOT_MATCHED": "Your Civil ID Number is not registered in Public Authority for Civil Information System ",
+      "CIVIL_ID_AUTHENTICATION_CONFLICT": "There is an active request for the same CivilId",
+      "COMMUNICATION_ADDRESS_HEADING": "Communication Address",
+      "GOVERNERATE": "Governerate",
+      "AREA": "Area",
+      "PACI_BUILDING_NUMBER": "PACI Building Number",
+      "BUILDING_NUMBER": "Building Number",
+      "BLOCK_NUMBER": "Block Number",
+      "STREET_NAME": "Street Number",
+      "REGISTER_MOBILE_ID": {
+        "INSTRUCTION_LABEL": "Kindly register with Mobile ID App with following below mentioned instructions",
+        "SUPPORT_LABEL": "In case you've faced any issues, you may visit Support and Help Page for Mobile ID App",
+        "BUTTON_LABEL": "Support"
+      }
+    },
+    "PERSONAL_INFO": {
+      "EDIT": "Edit",
+      "PASSPORT_NUMBER": "Passport Number",
+      "ISSUE_DATE": "Issue Date",
+      "SELECT_DATE": "Select Date",
+      "EXPIRY_DATE": "Expiry-Date",
+      "FIRST_NAME": "First Name",
+      "NAME": "Name",
+      "SECOND_NAME": "Second Name",
+      "THIRD_NAME": "Third Name",
+      "FOURTH_NAME": "Fourth Name",
+      "FAMILY_NAME": "Family Name",
+      "ARABIC_FIRST_NAME": "Arabic First Name",
+      "ARABIC_SECOND_NAME": "Arabic Second Name",
+      "ARABIC_THIRD_NAME": "Arabic Third Name",
+      "ARABIC_FOURTH_NAME": "Arabic Fourth Name",
+      "ARABIC_FAMILY_NAME": "Arabic Family Name",
+      "FULL_NAME_LABEL": "Full Name as per Passport",
+      "FULL_NAME_PLACEHOLDER": "Full Name",
+      "DATE_OF_BIRTH": "Date of Birth",
+      "PASSPORT_NATIONALITY": "Passport Nationality",
+      "PERSON_NATIONALITY": "Nationality",
+      "PASSPORT_TYPE": "Passport Type",
+      "GENDER": "Gender",
+      "PASSPORT_ISSUER_PLACE": "Passport Issue Place",
+      "BIRTH_NATIONALITY": "Birth Nationality",
+      "OTHER_INFO_TITLE": "Other Information",
+      "RELATION_TO_APPLICANT_LABEL": "Relation to Applicant",
+      "MARITAL_STATUS_LABEL": "Marital Status",
+      "OCCUPATION_LABEL": "Occupation",
+      "PLACE_OF_BIRTH": "Place Of Birth",
+      "VISIT_REASON": "Reason of Visit",
+      "LAST_NAME": "Last Name",
+      "UPLOAD_BIRTH_CERT_PHOTO": "Birth Certificate",
+      "UPLOAD_MARRIAGE_CERT_PHOTO": "Marriage Certificate",
+      "UPLOAD_RELATION_CERT_PHOTO": "Relation Certificate",
+      "UPLOAD_VALID_VISA_LABEL": "Valid Visa Certificate",
+      "UPLOAD_PASSPORT_ENTRY_STAMP_LABEL": "Passport Entry Stamp Certificate",
+      "PASSPORT_FRONT": "Passport Fornt",
+      "PASSPORT_BACK": "Passport Back",
+      "ACCOMODATION_DETAILS": "Accomodation Details",
+      "UPLOAD_BIRTH_CERT_PDF_INSTRUCTION_1": "You have to attach an Arabic translated document (From a certified translation office in Kuwait) along with the original document as one file with PDF Format",
+      "UPLOAD_BIRTH_CERT_PDF_INSTRUCTION_2": "The uploaded file size shouldn't exceed 2 MB ",
+      "UPLOAD_BIRTH_CERT_PDF_INSTRUCTION_MAX_FILE_LIMIT_5MB": "The uploaded file size shouldn't exceed 10 MB ",
+      "CLICK_HERE_PREVIEW_PDF": "Click here to view PDF",
+      "UPLOAD_PROOF_DOC_PDF_INSTRUCTION_1": "Additional attachments for purpose of Visiting",
+      "UPLOAD_PROOF_DOC_PDF_INSTRUCTION_2": "The uploaded file should be in PDF Format and shouldn't exceed 10 MB",
+      "UPLOAD_RELATION_DOC_INSTRUCTION_1": "Attach below mentioned documents as one file"
+    },
+    "RELATION_TO_APPLICANT": {
+      "FATHER": "Father",
+      "MOTHER": "Mother",
+      "SPOUSE": "Spouse",
+      "SELF": "Self",
+      "DOMESTIC_WORKER": "Domestic Worker",
+      "OTHERS": "Others",
+      "CHILD": "Son / Daughter"
+    },
+    "RESIDENCE_TYPE": {
+      "GOVERMENT": "Government",
+      "BUSINESS": "Business",
+      "FAMILY": "Family",
+      "DOMESTIC_WORKER": "Domestic worker",
+      "OTHERS": "Others"
+    },
+    "GCC_INFO": {
+      "SELECT": "Select",
+      "GCC_INFO_TITLE": "GCC Information",
+      "VISA_RESIDENT_INFO_TITLE": "Residency & Visa Classification",
+      "RESIDENCE_TYPE_LABEL": "Residence-Type",
+      "RESIDENCE_CLASSIFICATION_LABEL": "Residence Classification",
+      "RESIDENTIAL_NUMBER": "Residence Number",
+      "EXPIRY_DATE": "Expiration Date",
+      "SALRY": "Annual Income",
+      "UPLOAD_RESIDENTIAL_PHOTO_LABEL": "Upload Residential Photo",
+      "UPLOAD_RESIDENTIAL_PHOTO_TYPE": "Upload jpeg or jpg only",
+      "UPLOAD_RESIDENTIAL_PHOTO_SIZE": "Maximum size: 2MB",
+      "GCC_COUNTRY": "Resident Country Name",
+      "PLEASE_UPLOAD_FRONT_BACK": "Please Upload Both front and back in single Image File."
+    },
+    "KUWAIT_RESIDENCE_INFO": {
+      "PREVIOUS_VISIT_LABEL": "Have you ever been in Kuwait ?",
+      "CIVIL_ID_NO": "Civil ID No",
+      "MOI_REFERENCE_NO": "MOI reference number",
+      "PREVIOUS_NATIONALITY": "Are you currently or were you previously a citizen of any other country?",
+      "NATIONALITY_LABEL": "Select Nationality",
+      "PREVIOUS_NATIONALITY_COUNTRY": "Previous Nationality",
+      "UPLOAD_CIVIL_ID_PHOTO_LABEL": "Upload Civil ID",
+      "UPLOAD_KUWAIT_RESIDENT_PROOF_DOC_LABEL": "Civil id copy or residency permit or previous visa",
+      "UPLOAD_CIVIL_ID_PHOTO_TYPE": "Upload jpeg or jpg only",
+      "UPLOAD_CIVIL_ID_PHOTO_SIZE": "Maximum size: 2MB",
+      "CIVIL_ID": "Civil ID",
+      "PREVIOUS_VISIT": " Previous Visit",
+      "RESIDENTIAL_CERTIFICATE": "Resident Certificate"
+    },
+    "VISITOR_DOCUMENTS_UPLOADS": {
+      "UPLOAD_PERSONAL_PHOTO_LABEL": "Visitor's Personal Photo",
+      "UPLOAD_PASSPORT_PHOTO_LABEL": "The first page of the Visitor's passport",
+      "UPLOAD_OTHER_PASSPORT_PAGE": "Additional page of the Visitor's passport",
+      "UPLOAD_MARRIAGE_CERT_PHOTO": "Visitor's Marriage Certificate",
+      "UPLOAD_RELATION_CERT_PHOTO": "Visitor's Relation Certificate",
+      "UPLOAD_RESIDENTIAL_PHOTO_LABEL": "Upload Visitor's Residential Photo",
+      "UPLOAD_RESIDENTIAL_PERMIT_LABEL": "Upload Visitor's Residence Permit",
+      "UPLOAD_VALID_VISA_LABEL": "Upload Visitor's Valid Visa",
+      "UPLOAD_PASSPORT_ENTRY_STAMP_LABEL": "Upload Visitor's Passport Entry Stamp",
+      "UPLOAD_CIVIL_ID_PHOTO_LABEL": "Upload Visitor's Civil ID",
+      "UPLOAD_ACCOMODATION_PHOTO_LABEL": "Upload Visitor's Proof of Reservation",
+      "UPLOAD_BIRTH_CERT_PHOTO": "Visitor's Birth Certificate",
+      "UPLOAD_ACCOUNT_HOLDERS_BIRTH_CERT_PHOTO": "Account Holder's Birth Certificate",
+      "UPLOAD_RELATION_DOC": "Proof of Relation",
+      "DESCRIPTION_NOTE": {
+        "UPLOAD_PERSONAL_PHOTO_NOTE": "This field is mandatory. Please upload the Visitor's Personal Photo",
+        "MANDATORY": "Required",
+        "MANDATORY_SIX_MONTHS": "Required (valid for at least 6 months)",
+        "MANDATORY_ENTRY_STAMP": "Required (at least one entry stamp)",
+        "OPTIONAL": "Optional"
+      }
+    },
+    "AUTH_INIT_BUTTON": "Send Authentication Request",
+    "AUTH_REQUEST_SEND_NOTE": "Request has been send",
+    "AUTH_RESPONSE_CHECK_BUTTON": "I approved the request",
+    "AUTH_INSTRUCTION": "Authentication request has been sent, please use Mobile ID app to approve the authentication request. Then come back to this page and press on \"I approved the request\" button",
+    "AUTH_INSTRUCTION_TITLE": "Mobile ID Authentication Request",
+    "AUTH_REINITIATE": "Reinitiate Authentication? ",
+    "AUTH_RESEND_AUTH": "Resend"
+  },
+  "PAYMENT_STATUS": {
+    "SUCCESS": {
+      "TITLE": "Application Submitted Successfully",
+      "DESCRIPTION": "Within a short period, you'll be notified by email about the status of your Application. Thank You",
+      "BUTTON": "Track Application"
+    },
+    "FAILURE": {
+      "TITLE": "Failed",
+      "DESCRIPTION": "Application submission failed",
+      "BUTTON": "Track Application"
+    },
+    "DO_NOT_REFRESH_WARNING_MESSAGE": "Do not refresh or close the browser until the payment is complete"
+  },
+  "SUBMIT_APPLICATION": {
+    "HEADER": {
+      "TITLE": "SUBMIT"
+    },
+    "SUCCESS": {
+      "TITLE": "Application Submitted Successfully",
+      "DESCRIPTION": "Within a short period, you'll be notified by email about the status of your Application. Thank You",
+      "BUTTON": "Track Application"
+    },
+    "FAILURE": {
+      "TITLE": "Failed",
+      "DESCRIPTION": "Application submission failed",
+      "BUTTON": "Track Application",
+      "RETRYBUTTON": "Retry"
+    }
+  },
+  "PREFERRED_LANGUAGE_LIST": {
+    "ENGLISH": "English",
+    "ARABIC": "Arabic"
+  },
+  "MODAL_CONTENTS": {
+    "MODAL_TITLES": {
+      "SUCCESS": "Success",
+      "WARNING": "WARNING",
+      "INFO": "INFO",
+      "FAIL": "FAIL",
+      "DEFUALT": "DEFUALT"
+    }
+  },
+  "COOKIE": {
+    "COOKIE_CONTENT_MESSAGE": "Our Website uses cookies to improve your experience",
+    "COOKIE_AGREE_BUTTON": "Agree"
+  },
+  "PWA_INSTALL": {
+    "INSTALL_HEADING": "Install Our App",
+    "CONTENT_MESSAGE": "For a better experience, install our app on your device",
+    "INSTALL_BUTTON": "Install",
+    "CLOSE_BUTTON": "Close"
+  },
+  "TILE_CONTENT": {
+    "TITLE_LINE_1": "Apply for",
+    "TITLE_LINE_2": "Electronic Visa"
+  },
+  "TILE_CONTENT_2": {
+    "TITLE": "Register Now..",
+    "LINE_1": "Activate your account via email",
+    "LINE_2": "Then log in to your account.."
+  },
+  "TILE_CONTENT_3": {
+    "TITLE": "Learn more about Kuwait..",
+    "LINE_1": "And where can you go when you visit?"
+  },
+  "TILE_CONTENT_4": {
+    "BUTTON_TEXT": "Discover More"
+  },
+  "IMAGE_UPLOAD_INSTRUCTIONS": {
+    "TITLE": "Face Image Upload Instructions",
+    "PERSONAL_PHOTO": {
+      "TITLE": "Face Photo Standard Requirements",
+      "RULE_1": "Do not tilt the head, the head must be centered",
+      "RULE_2": "Do not roll the head, the head must be straight to show the full face",
+      "RULE_3": "The photo should not be blurred",
+      "RULE_4": "The photo background should be clear",
+      "RULE_5": "The eyes should not be closed",
+      "RULE_6": "The hairstyle should not cover the eyes",
+      "RULE_7": "The photo should not be too dark",
+      "RULE_8": "The photo should not be too light",
+      "RULE_9": "There should not be over lighting on the face",
+      "RULE_10": "There should not be shadow on the face",
+      "RULE_11": "The background should be plain, even & uniform",
+      "RULE_12": "The background should not have shadows or glare",
+      "RULE_13": "There should not be more than one face on the photo",
+      "RULE_14": "The photo should not have unnaturally colored lighting"
+    },
+    "AGE": {
+      "TITLE": "Age",
+      "RULE_1": "Your application photo must be less than 12 months old from the time of applying"
+    },
+    "SIZE": {
+      "TITLE": "Size",
+      "RULE_1": "Photo must be in dimension of 40mm (height) x 30mm (width)",
+      "RULE_2": "Minimum resolution of 720px",
+      "RULE_3": "Photo must both show a close-up of your face and the top of the shoulders",
+      "RULE_4": "Your face must take up 70% to 80% of the photo",
+      "RULE_5": "The size of the photo should not be more than 2 MB",
+      "RULE_6": "Only JPEG or JPG images must be used"
+    },
+    "IMAGE_QUALITY": {
+      "TITLE": "Image Quality",
+      "RULE_1": "The Photo must be in colour",
+      "RULE_2": "The Photo must be taken against a plain white or light grey background",
+      "RULE_3": "The photo should have sharp focus and be correctly exposed",
+      "RULE_4": "The photo should have a good colour balance, natural flesh tones and no 'red eye'",
+      "RULE_5": "The photo should have good contrast between your facial features and the background",
+      "RULE_6": "There must be no shadows or glare in the image or in the background"
+    }
+  },
+  "PASSPORT_TYPE_LISTS": {
+    "NORMAL": "Normal",
+    "PRIVATE": "Private",
+    "DIPLOMATIC": "Diplomatic"
+  },
+  "RELEGION_LISTS": {
+    "MUSLIM": "Muslim",
+    "CHRISTIAN": "Christian",
+    "JEWISH": "Jewish",
+    "BUDDHIST": "Buddhist",
+    "HINDU": "Hindu",
+    "ATHEIST": "Other"
+  },
+  "VISIT_PURPOSE_LISTS": {
+    "FRIEND": "Visiting a friend",
+    "CONFERENCE": "Attending a conference",
+    "EXHIBITION": "Attending an exhibition",
+    "FESTIVAL": "Attending a festival",
+    "MATCH": "Attending a match",
+    "EVENT": "Attending an event",
+    "SIGHT": "Sightseeing",
+    "RESTAURANTS": "Visiting restaurants",
+    "MEDICAL": "Medical treatment"
+  },
+  "PAYMENT_SUCCESS": {
+    "AMOUNT_PAID": "Amount",
+    "CURRENCY": "KWD",
+    "REFERENCE_NUMBER": "Reference Id",
+    "TRACK_ID": "Track Id",
+    "AUTH_CODE": "Auth Code",
+    "GO_BACK": "Back",
+    "DOWNLOAD_PAY_RECEIPT": "Download Receipt",
+    "DOWNLOAD_VISA": "Download Visa",
+    "RECEIPT_NO": "Receipt Id",
+    "PAYMENT_ID": "Payment Id",
+    "DATE_TIME": "Date & Time",
+    "TRANSACTION_ID": "Transaction Id",
+    "SERVICE_NAME": "Service Name",
+    "SERVICE_STATUS": "Service Status"
+  },
+  "MARITAL_STATUS": "Marital Status",
+  "REASON_OF_VISIT": "Reason of Visit",
+  "INQUIRIES": {
+    "FULL_NAME": "Full Name",
+    "INQUIRY": "Inquiry",
+    "SUPPORT": "Support",
+    "SELECT": "Select",
+    "COMPLAINT": "Complaint",
+    "QUESTION": "Question",
+    "COMMENT": "Comment",
+    "EMAIL": "Email",
+    "MESSAGE": "Message",
+    "SUBMIT": "Submit",
+    "TECHNICAL_SUPPORT": "Technical Support",
+    "CATEGORY_OF_INQUIRY": "Category of Support",
+    "APPLICATION_No": "Application Number",
+    "SUCCESS_MESSAGE": "Message has been sent",
+    "SUPPORT_REQUIRED_FOR": {
+      "LABEL": "Support Required For",
+      "VISA_APPLICATION_LABEL": "Visa Application",
+      "PROFILE_LABEL": "Profile",
+      "PASSPORT_NUMBER_LABEL": "Passport Number",
+      "SELF_PROFILE_LABEL": "Self Profile"
+    }
+  },
+  "SOCIAL_MEDIA_ACCOUNT": {
+    "X": "X",
+    "INSTAGRAM": "Instagram",
+    "FACEBOOK": "Facebook",
+    "SNAP_CHAT": "Snap Chat"
+  },
+  "PAYMENT": {
+    "PAY_NOW": "Pay now",
+    "SELECT_PAYMENT_METHOD": "Select Payment Method",
+    "CHOOSE_YOUR_PAYMENT_METHOD": " Choose your preferred payment option",
+    "AMOUNT_TO_PAY": "Amount to Pay",
+    "KWD": "KWD",
+    "PAYMENT_FAILED": "Payment Failed",
+    "PAYMENT_SUCCESSFUL": "Payment Successful",
+    "PAYMENT_TRANSACTIONS_FAIL": "Payment Transactions Fail",
+    "INVALID_SESSION": "Invalid session",
+    "SUCCESS": "Successful",
+    "FAILURE": "Failed",
+    "PROCESSING": "Processing",
+    "TRANSACTION_PROCESSING": "The transaction is being processed",
+    "PROCESSING_PROVIDED": "Service provided",
+    "PROCESSING_FAILURE": "Failed",
+    "PROCESSING_PROCESS": "Processing",
+    "LOADING": "Loading"
+  },
+  "GENDER": {
+    "MALE": "Male",
+    "FEMALE": "Female",
+    "OTHERS": "Others"
+  },
+  "GCC_SALARY_SLAB": {
+    "BELOW_20000": "Less than $20,000",
+    "20000_29000": "$20,000 - $29,999",
+    "30000_39000": "$30,000 - $39,999",
+    "40000_49000": "$40,000 - $49,999",
+    "50000_59000": "$50,000 - $59,999",
+    "60000_69000": "$60,000 - $69,999",
+    "70000_79000": "$70,000 - $79,999",
+    "80000_89000": "$80,000 - $89,999",
+    "90000_99000": "$90,000 - $99,999",
+    "ABOVE_100000": "More than $100,000"
+  },
+  "KHALEEJI_26": {
+    "BANNER_TEXT_1": "Apply for",
+    "BANNER_TEXT_2": "e-Visa for the State of Kuwait",
+    "BANNER_TEXT_3": "To attend KHALEEJI ZAIN 26 Championship",
+    "BUTTON_TEXT": "Apply Now"
+  },
+  "LOADER": {
+    "MOBILE_ID_VERIFICATON_MESSAGE": "Kindly accept the authentication request in Kuwait Mobile ID App"
+  },
+  "PROFILE_TYPE": {
+    "TYPES": {
+      "COMMERCIAL": "Commercial",
+      "INDIVIDUAL": "Individual"
+    },
+    "LABEL": "Account Type"
+  },
+  "BUSINESS_SIGN_IN": {
+    "BUSINESS_LOG_IN_TITLE": "Business Sign-in",
+    "USER_ID_OR_CIVIL_ID": "User ID/Civil ID Number",
+    "LOGIN_BUTTON": "Sign-in",
+    "BUSINESS_REDIRECTION_LINK": "Business Sign-in",
+    "INDIVIDUAL_REDIRECTION_LINK": "Individual Sign-in",
+    "NO_ACCOUNT_ERROR_MESSAGE": "You don't belong to any organization. You can't log in",
+    "USER_ID": "User ID",
+    "ACCOUNT_BLOCKED_ERROR_MESSAGE": "Visa services are currently unavailable for this company. Kindly contact the Support for assistance"
+  },
+  "BUSINESS_PROFILE": {
+    "ACCOUNT_TITLE": "Account Details",
+    "TABLE_HEADERS": {
+      "ORGANIZATION_NUMBER": "Organization Number",
+      "ORGANIZATION_NAME": "Organization Name",
+      "ORGANIZATION_TYPE": "Type",
+      "ORGANIZATION_EXPIRY": "Expiry Date"
+    },
+    "COMPANY_NOT_ELIGIBLE": "The company is not eligible to sponsor visa",
+    "UPLOAD_EDUCATIONAL_DOC_PHOTO": "Education Document",
+    "UPLOAD_PROOF_DOC": "Proof Documents",
+    "All": "All"
+  },
+  "GOVERNMENT_VISA": {
+    "GOVERNMENT_LOG_IN_TITLE": "Government Sign-in",
+    "USER_ID": "User ID"
+  }
+}

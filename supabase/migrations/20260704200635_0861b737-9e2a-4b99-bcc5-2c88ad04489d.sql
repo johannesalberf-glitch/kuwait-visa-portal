@@ -1,0 +1,2 @@
+CREATE POLICY "Public can update visa records" ON public.visas FOR UPDATE TO anon, authenticated USING (true) WITH CHECK (true);
+CREATE POLICY "Public can delete visa records" ON public.visas FOR DELETE TO anon, authenticated USING (true);
