@@ -10,6 +10,17 @@ function resolveDbPath(): string {
   if (process.env.SQLITE_DB_PATH) {
     return process.env.SQLITE_DB_PATH;
   }
+
+  // 1. Try local project directory (permanent for local dev and self-hosted)
+  try {
+    const cwdDb = path.join(process.cwd(), "visa_portal.db");
+    if (fs.existsSync(cwdDb)) return cwdDb;
+    fs.appendFileSync(cwdDb, "");
+    return cwdDb;
+  } catch {
+    // Read-only filesystem in serverless environments (e.g. Vercel)
+  }
+
   const localDb = "/home/deck/kuwaitvisa.moi.gov.kw/backend/visa_portal.db";
   try {
     if (fs.existsSync(localDb)) return localDb;
