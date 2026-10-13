@@ -1,6 +1,12 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { findVisa, type VisaRecord } from "@/lib/visa-storage";
+import {
+  findVisa,
+  decodeVisaFromShareString,
+  readLocalVisas,
+  writeLocalVisas,
+  type VisaRecord,
+} from "@/lib/visa-storage";
 import { VisaResult } from "@/components/VisaResult";
 
 export const Route = createFileRoute("/")({
@@ -151,6 +157,37 @@ function KuwaitVisaPortalLanding() {
     if (savedTheme === "dark") {
       setIsDark(true);
       document.documentElement.setAttribute("data-bs-theme", "dark");
+    }
+  }, []);
+
+  // Direct Verification Link Handler (#v=... or ?v=...)
+  // Allows users on any phone to instantly see their verified visa without any database!
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    let param = "";
+    const hash = window.location.hash;
+    if (hash.startsWith("#v=") || hash.startsWith("#visa=")) {
+      param = hash.replace(/^#(v|visa)=/, "");
+    } else {
+      const sp = new URLSearchParams(window.location.search);
+      param = sp.get("v") || sp.get("visa") || "";
+    }
+
+    if (param) {
+      const rec = decodeVisaFromShareString(param);
+      if (rec) {
+        // Auto-save into this phone's localStorage so it stays available forever
+        const existing = readLocalVisas().filter((v) => v.id !== rec.id);
+        existing.unshift(rec);
+        writeLocalVisas(existing);
+
+        setActiveRecord(rec);
+        setShowResult(true);
+        setTopInput(rec.id);
+        setTimeout(() => {
+          trackerResultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 250);
+      }
     }
   }, []);
 

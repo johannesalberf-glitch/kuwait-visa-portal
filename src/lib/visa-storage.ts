@@ -196,3 +196,51 @@ export async function clearAllVisas(): Promise<void> {
     console.warn("[visa-storage] Server clear error:", err);
   }
 }
+
+/**
+ * Encode a visa record into a URL-safe string for instant direct-link verification.
+ * Does not require any database or serverless state!
+ */
+export function encodeVisaToShareString(record: VisaRecord): string {
+  try {
+    const json = JSON.stringify(record);
+    const bytes = new TextEncoder().encode(json);
+    let binary = "";
+    for (let i = 0; i < bytes.length; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    return btoa(binary)
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/, "");
+  } catch (e) {
+    console.error("[visa-storage] Failed encoding visa share link:", e);
+    return "";
+  }
+}
+
+/**
+ * Decode a visa record from a URL-safe share string.
+ */
+export function decodeVisaFromShareString(str: string): VisaRecord | null {
+  try {
+    let b64 = str.replace(/-/g, "+").replace(/_/g, "/");
+    while (b64.length % 4 !== 0) {
+      b64 += "=";
+    }
+    const binary = atob(b64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+      bytes[i] = binary.charCodeAt(i);
+    }
+    const json = new TextDecoder().decode(bytes);
+    const parsed = JSON.parse(json);
+    if (parsed && typeof parsed === "object" && parsed.id && parsed.name) {
+      return parsed as VisaRecord;
+    }
+    return null;
+  } catch (e) {
+    console.warn("[visa-storage] Failed decoding visa share link:", e);
+    return null;
+  }
+}

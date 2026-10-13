@@ -23,6 +23,7 @@ import {
   checkDbHealth,
   syncAllLocalVisasToCloud,
   readLocalVisas,
+  encodeVisaToShareString,
   type VisaRecord,
   type DbHealthStatus,
   type SaveVisaResult,
@@ -270,6 +271,29 @@ function AdminPanel() {
     } finally {
       setSyncingLocal(false);
     }
+  }
+
+  const [copiedShare, setCopiedShare] = useState(false);
+
+  function getShareUrl(rec: VisaRecord) {
+    if (typeof window === "undefined") return "";
+    const encoded = encodeVisaToShareString(rec);
+    return `${window.location.origin}/#v=${encoded}`;
+  }
+
+  function handleCopyShareLink() {
+    if (!preview) return;
+    const url = getShareUrl(preview);
+    navigator.clipboard.writeText(url);
+    setCopiedShare(true);
+    setTimeout(() => setCopiedShare(false), 3000);
+  }
+
+  function handleShareWhatsApp() {
+    if (!preview) return;
+    const url = getShareUrl(preview);
+    const msg = `State of Kuwait — Ministry of Interior\nElectronic Visa Verification\n\nApplicant: ${preview.name}\nOTP Number: ${preview.id}\nPassport: ${preview.passport}\n\nView Official eVisa:\n${url}`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, "_blank");
   }
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
@@ -710,9 +734,39 @@ function AdminPanel() {
               <button className="btn-print" onClick={() => window.print()}>
                 Print Visa Card
               </button>
+              <button
+                type="button"
+                onClick={handleCopyShareLink}
+                className="btn-print"
+                style={{
+                  background: copiedShare
+                    ? "#10b981"
+                    : "linear-gradient(135deg, #1a5f9e 0%, #0d3d66 100%)",
+                  borderColor: copiedShare ? "#10b981" : "rgba(201,168,76,0.5)",
+                  color: "#fff",
+                }}
+              >
+                {copiedShare ? "✓ Direct Link Copied!" : "📋 Copy Direct Link (For Any Phone)"}
+              </button>
+              <button
+                type="button"
+                onClick={handleShareWhatsApp}
+                className="btn-print"
+                style={{
+                  background: "#25D366",
+                  borderColor: "#25D366",
+                  color: "#fff",
+                  fontWeight: "bold",
+                }}
+              >
+                📲 Share on WhatsApp
+              </button>
               <div className="issued-badge">
                 OTP: <strong>{preview.id}</strong> · Database Tracker: <strong>{preview.tracker}</strong>
               </div>
+            </div>
+            <div className="mt-3 text-center text-xs text-amber-200/90 max-w-lg mx-auto">
+              💡 <strong>Instant Cross-Device Sharing:</strong> Send this Direct Link to the user on WhatsApp or SMS. It immediately opens their official visa on any phone, with zero database setup required!
             </div>
           </div>
         )}
@@ -1071,6 +1125,18 @@ function VisaManager({
 
                 {/* Card Actions Toolbar */}
                 <div className="flex justify-end items-center gap-2 mt-3 pt-2.5 border-t border-[rgba(255,255,255,0.08)]">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const url = `${window.location.origin}/#v=${encodeVisaToShareString(r)}`;
+                      navigator.clipboard.writeText(url);
+                      setSuccessMsg(`Direct Link for Visa #${r.id} copied! Send this to the user.`);
+                    }}
+                    className="min-h-[38px] inline-flex items-center gap-1 text-xs font-semibold text-emerald-200 hover:text-white px-2.5 py-1.5 rounded-lg bg-emerald-900/40 border border-emerald-500/40 hover:bg-emerald-800/60 transition cursor-pointer"
+                    title="Copy Direct Link (Works on any phone with zero database)"
+                  >
+                    📋 Link
+                  </button>
                   <Link
                     to="/visa/$id"
                     params={{ id: r.id }}
@@ -1133,6 +1199,18 @@ function VisaManager({
                     <td style={{ padding: "12px 10px", color: "#fde68a" }}>{r.visaType}</td>
                     <td style={{ padding: "12px 10px", fontFamily: "ui-monospace, monospace" }}>{fmtDate(r.expiryDate)}</td>
                     <td style={{ padding: "12px 10px", textAlign: "right", whiteSpace: "nowrap" }}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const url = `${window.location.origin}/#v=${encodeVisaToShareString(r)}`;
+                          navigator.clipboard.writeText(url);
+                          setSuccessMsg(`Direct Link for Visa #${r.id} copied! Send this to the user.`);
+                        }}
+                        className="inline-flex items-center gap-1 text-emerald-300 hover:text-white px-2 py-1 rounded bg-emerald-900/30 border border-emerald-500/30 mr-2 cursor-pointer text-xs"
+                        title="Copy Direct Verification Link (Works on any phone)"
+                      >
+                        📋 Copy Link
+                      </button>
                       <Link
                         to="/visa/$id"
                         params={{ id: r.id }}
