@@ -94,8 +94,12 @@ function isSupabaseConfigured() {
   const url = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
   const key =
     process.env.SUPABASE_SERVICE_ROLE_KEY ||
+    process.env.SUPABASE_SERVICE_KEY ||
+    process.env.SUPABASE_KEY ||
     process.env.SUPABASE_PUBLISHABLE_KEY ||
-    process.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+    process.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
+    process.env.SUPABASE_ANON_KEY ||
+    process.env.VITE_SUPABASE_ANON_KEY;
   return !!(
     url &&
     key &&
@@ -104,26 +108,153 @@ function isSupabaseConfigured() {
   );
 }
 
-// PUBLIC: look up a visa by its OTP id or passport.
+export type DbHealthStatus = {
+  supabaseConfigured: boolean;
+  supabaseConnected: boolean;
+  supabaseUrl: string | null;
+  tableExists: boolean;
+  rowCount: number;
+  error: string | null;
+  mode: "cloud" | "local_only";
+};
+
+// Check health of cloud database
+export const getDbHealthFn = createServerFn({ method: "GET" }).handler(
+  async (): Promise<DbHealthStatus> => {
+    const configured = isSupabaseConfigured();
+    if (!configured) {
+      return {
+        supabaseConfigured: false,
+        supabaseConnected: false,
+        supabaseUrl: null,
+        tableExists: false,
+        rowCount: 0,
+        error: "Supabase environment variables (SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY or SUPABASE_KEY) are missing in Vercel settings.",
+        mode: "local_only",
+      };
+    }
+
+    const rawUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || "";
+    const maskedUrl = rawUrl ? rawUrl.replace(/https?:\/\//, "").slice(0, 15) + "..." : null;
+
+    try {
+      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+      const { count, error } = await supabaseAdmin
+        .from("visas")
+        .select("id", { count: "exact", head: true });
+
+      if (error) {
+        const isMissingTable =
+          error.code === "42P01" ||
+          error.message?.includes("does not exist") ||
+          error.message?.includes("relation \"public.visas\"");
+
+        return {
+          supabaseConfigured: true,
+          supabaseConnected: !isMissingTable,
+          supabaseUrl: maskedUrl,
+          tableExists: !isMissingTable,
+          rowCount: 0,
+          error: isMissingTable
+            ? "The 'visas' table does not exist in your Supabase database. Please run SUPABASE_SETUP.sql in Supabase SQL Editor."
+            : error.message,
+          mode: isMissingTable ? "local_only" : "cloud",
+        };
+      }
+
+      return {
+        supabaseConfigured: true,
+        supabaseConnected: true,
+        supabaseUrl: maskedUrl,
+        tableExists: true,
+        rowCount: count ?? 0,
+        error: null,
+        mode: "cloud",
+      };
+    } catch (err) {
+      return {
+        supabaseConfigured: true,
+        supabaseConnected: false,
+        supabaseUrl: maskedUrl,
+        tableExists: false,
+        rowCount: 0,
+        error: err instanceof Error ? err.message : String(err),
+        mode: "local_only",
+      };
+    }
+  },
+);
+
+// PUBLIC: look up a visa by its OTP id, tracker, or passport.
 export const lookupVisaFn = createServerFn({ method: "POST" })
   .inputValidator((data: { id: string }) => data)
   .handler(async ({ data }) => {
-    const id = data.id.trim();
-    if (!id) return { record: null as VisaRecord | null };
+    const raw = (data.id ?? "").trim();
+    if (!raw) return { record: null as VisaRecord | null };
+
+    const clean = raw.toUpperCase();
+    const cleanDigits = raw.replace(/\D/g, "").slice(0, 6);
 
     // 1. Try Supabase first if configured
     if (isSupabaseConfigured()) {
       try {
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-        const clean = id.toUpperCase();
-        const { data: row, error } = await supabaseAdmin
+
+        // A. Direct primary key / OTP lookup (6 digits)
+        if (cleanDigits.length === 6) {
+          const { data: rowById, error: errId } = await supabaseAdmin
+            .from("visas")
+            .select("*")
+            .eq("id", cleanDigits)
+            .maybeSingle();
+
+          if (!errId && rowById) {
+            return { record: fromRow(rowById as unknown as Row) };
+          }
+
+          // B. Direct tracker lookup (6 digits)
+          const { data: rowByTracker, error: errTrk } = await supabaseAdmin
+            .from("visas")
+            .select("*")
+            .eq("tracker", cleanDigits)
+            .maybeSingle();
+
+          if (!errTrk && rowByTracker) {
+            return { record: fromRow(rowByTracker as unknown as Row) };
+          }
+        }
+
+        // C. Exact ID match (if ID is alphanumeric or other format)
+        const { data: rowExact, error: errExact } = await supabaseAdmin
           .from("visas")
           .select("*")
-          .or(`id.eq.${id.slice(0, 6)},passport.ilike.${clean},tracker.ilike.${clean}`)
+          .eq("id", clean)
           .maybeSingle();
 
-        if (!error && row) {
-          return { record: fromRow(row as unknown as Row) };
+        if (!errExact && rowExact) {
+          return { record: fromRow(rowExact as unknown as Row) };
+        }
+
+        // D. Passport match (case-insensitive)
+        const { data: rowPassport, error: errPass } = await supabaseAdmin
+          .from("visas")
+          .select("*")
+          .ilike("passport", clean)
+          .maybeSingle();
+
+        if (!errPass && rowPassport) {
+          return { record: fromRow(rowPassport as unknown as Row) };
+        }
+
+        // E. Tracker match (case-insensitive)
+        const { data: rowTrackerRaw, error: errTrkRaw } = await supabaseAdmin
+          .from("visas")
+          .select("*")
+          .ilike("tracker", clean)
+          .maybeSingle();
+
+        if (!errTrkRaw && rowTrackerRaw) {
+          return { record: fromRow(rowTrackerRaw as unknown as Row) };
         }
       } catch (sbErr) {
         console.warn("[visa-storage] Supabase lookup error, falling back to SQLite:", sbErr);
@@ -133,7 +264,7 @@ export const lookupVisaFn = createServerFn({ method: "POST" })
     // 2. Fallback to SQLite
     try {
       const { sqliteLookupVisa } = await import("./sqlite-storage.server");
-      const record = sqliteLookupVisa(id);
+      const record = sqliteLookupVisa(raw);
       return { record };
     } catch {
       return { record: null };
@@ -176,10 +307,15 @@ export const saveVisaFn = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     await requireAdmin();
 
+    let sqliteSaved = false;
+    let cloudSaved = false;
+    let cloudError: string | null = null;
+
     // 1. Always save to local SQLite first
     try {
       const { sqliteSaveVisa } = await import("./sqlite-storage.server");
       sqliteSaveVisa(data.record);
+      sqliteSaved = true;
     } catch (sqlErr) {
       console.warn("[visa-storage] SQLite save error:", sqlErr);
     }
@@ -193,13 +329,50 @@ export const saveVisaFn = createServerFn({ method: "POST" })
           .upsert(toRowInsert(data.record), { onConflict: "id" });
         if (error) {
           console.error("[visa-storage] Supabase upsert error:", error.message);
+          cloudError = error.message;
+        } else {
+          cloudSaved = true;
         }
       } catch (sbErr) {
         console.error("[visa-storage] Supabase upsert exception:", sbErr);
+        cloudError = sbErr instanceof Error ? sbErr.message : String(sbErr);
       }
+    } else {
+      cloudError = "Supabase cloud database is NOT configured in Vercel environment variables.";
     }
 
-    return { ok: true as const };
+    return { ok: true as const, sqliteSaved, cloudSaved, cloudError };
+  });
+
+export const syncBulkVisasFn = createServerFn({ method: "POST" })
+  .inputValidator((data: { records: VisaRecord[] }) => data)
+  .handler(async ({ data }) => {
+    await requireAdmin();
+    if (!data.records || !data.records.length) {
+      return { synced: 0, error: null };
+    }
+
+    if (!isSupabaseConfigured()) {
+      return {
+        synced: 0,
+        error: "Supabase cloud database is NOT configured. Please set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.",
+      };
+    }
+
+    try {
+      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+      const rows = data.records.map((r) => toRowInsert(r));
+      const { error } = await supabaseAdmin
+        .from("visas")
+        .upsert(rows, { onConflict: "id" });
+
+      if (error) {
+        return { synced: 0, error: error.message };
+      }
+      return { synced: data.records.length, error: null };
+    } catch (e) {
+      return { synced: 0, error: e instanceof Error ? e.message : String(e) };
+    }
   });
 
 export const updateVisaFn = createServerFn({ method: "POST" })

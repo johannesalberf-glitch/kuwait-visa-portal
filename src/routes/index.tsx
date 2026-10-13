@@ -188,10 +188,14 @@ function KuwaitVisaPortalLanding() {
     const cleanOtp = query.replace(/\D/g, "").slice(0, 6);
 
     try {
-      // 1. First attempt exact 6-digit OTP search in Supabase database
+      // 1. First attempt exact 6-digit OTP search in database
       let res: VisaRecord | null = null;
       if (cleanOtp.length === 6) {
         res = await findVisa(cleanOtp);
+      }
+      // 2. Also attempt direct query (tracker or passport lookup)
+      if (!res && query.length >= 3) {
+        res = await findVisa(query);
       }
 
       if (res) {
@@ -230,17 +234,22 @@ function KuwaitVisaPortalLanding() {
     const cleanOtp = query.replace(/\D/g, "").slice(0, 6);
 
     try {
+      let res: VisaRecord | null = null;
       if (cleanOtp.length === 6) {
-        const res = await findVisa(cleanOtp);
-        if (res) {
-          setActiveRecord(res);
-          setShowResult(true);
-          setModal(null);
-          setTimeout(() => {
-            trackerResultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-          }, 150);
-          return;
-        }
+        res = await findVisa(cleanOtp);
+      }
+      if (!res && query.length >= 3) {
+        res = await findVisa(query);
+      }
+
+      if (res) {
+        setActiveRecord(res);
+        setShowResult(true);
+        setModal(null);
+        setTimeout(() => {
+          trackerResultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 150);
+        return;
       }
       setModalError(`No record found for "${query}". Please check the 6-digit OTP number.`);
     } catch {

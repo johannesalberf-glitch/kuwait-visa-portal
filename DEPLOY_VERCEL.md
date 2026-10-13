@@ -1,19 +1,25 @@
 # Deploying to Vercel
 
-## 1. Environment variables (Vercel → Settings → Environment Variables)
+## 1. Cloud Database Setup (Supabase)
+To make newly generated visas visible across all phones and devices:
 
-Required:
+1. Create a free project at [supabase.com](https://supabase.com).
+2. Go to **SQL Editor** → Click **New Query** → Paste the entire content of `SUPABASE_SETUP.sql` from this repository → Click **Run**.
+3. Go to **Project Settings** → **API**:
+   - Copy **Project URL** (e.g. `https://xyzcompany.supabase.co`)
+   - Copy **service_role secret key** (or anon key)
 
-- `ADMIN_PASSWORD` — password for the `/admin` login (username is always `admin`)
-- `VITE_SUPABASE_URL` — copy from `.env`
-- `VITE_SUPABASE_PUBLISHABLE_KEY` — copy from `.env`
-- `VITE_SUPABASE_PROJECT_ID` — copy from `.env`
-- `SUPABASE_URL` — same value as `VITE_SUPABASE_URL`
-- `SUPABASE_PUBLISHABLE_KEY` — same value as `VITE_SUPABASE_PUBLISHABLE_KEY`
+## 2. Environment Variables in Vercel
+Go to **Vercel** → Your Project → **Settings** → **Environment Variables**:
 
-Add all of these for **Production**, **Preview**, and **Development**.
+Add these variables for **Production**, **Preview**, and **Development**:
+- `ADMIN_PASSWORD` — password for `/admin` (e.g. `admin1234admin`)
+- `SUPABASE_URL` — your Supabase Project URL
+- `SUPABASE_SERVICE_ROLE_KEY` — your Supabase secret key (or anon public key)
 
-## 2. Build settings
+*(Optional aliases also supported automatically: `VITE_SUPABASE_URL`, `SUPABASE_KEY`, `SUPABASE_ANON_KEY`, `SUPABASE_PUBLISHABLE_KEY`)*
+
+## 3. Build Settings
 
 - Framework preset: **Other**
 - Build command: `npm run build`

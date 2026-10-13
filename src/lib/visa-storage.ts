@@ -2,18 +2,28 @@ import {
   lookupVisaFn,
   listVisasFn,
   saveVisaFn,
+  syncBulkVisasFn,
+  getDbHealthFn,
   updateVisaFn,
   deleteVisaFn,
   clearAllVisasFn,
   type VisaRecord,
   type VisaDocument,
+  type DbHealthStatus,
 } from "./visa-storage.functions";
 
-export type { VisaRecord, VisaDocument };
+export type { VisaRecord, VisaDocument, DbHealthStatus };
+
+export type SaveVisaResult = {
+  ok: boolean;
+  cloudSaved: boolean;
+  cloudError: string | null;
+  sqliteSaved: boolean;
+};
 
 const LOCAL_STORAGE_KEY = "kuwait_visa_portal_records_v1";
 
-function readLocalVisas(): VisaRecord[] {
+export function readLocalVisas(): VisaRecord[] {
   if (typeof window === "undefined" || !window.localStorage) return [];
   try {
     const raw = window.localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -26,7 +36,7 @@ function readLocalVisas(): VisaRecord[] {
   }
 }
 
-function writeLocalVisas(records: VisaRecord[]): void {
+export function writeLocalVisas(records: VisaRecord[]): void {
   if (typeof window === "undefined" || !window.localStorage) return;
   try {
     window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(records));
@@ -35,7 +45,33 @@ function writeLocalVisas(records: VisaRecord[]): void {
   }
 }
 
-export async function saveVisa(record: VisaRecord): Promise<void> {
+export async function checkDbHealth(): Promise<DbHealthStatus> {
+  try {
+    return await getDbHealthFn();
+  } catch (e) {
+    return {
+      supabaseConfigured: false,
+      supabaseConnected: false,
+      supabaseUrl: null,
+      tableExists: false,
+      rowCount: 0,
+      error: e instanceof Error ? e.message : "Health check failed",
+      mode: "local_only",
+    };
+  }
+}
+
+export async function syncAllLocalVisasToCloud(): Promise<{ synced: number; error: string | null }> {
+  const local = readLocalVisas();
+  if (!local.length) return { synced: 0, error: null };
+  try {
+    return await syncBulkVisasFn({ data: { records: local } });
+  } catch (e) {
+    return { synced: 0, error: e instanceof Error ? e.message : "Bulk sync failed" };
+  }
+}
+
+export async function saveVisa(record: VisaRecord): Promise<SaveVisaResult> {
   // 1. Immediately persist to browser localStorage so records are NEVER lost when app/tab is closed
   const existing = readLocalVisas().filter((v) => v.id !== record.id);
   existing.unshift(record);
@@ -43,9 +79,21 @@ export async function saveVisa(record: VisaRecord): Promise<void> {
 
   // 2. Persist to server / cloud database
   try {
-    await saveVisaFn({ data: { record } });
+    const res = await saveVisaFn({ data: { record } });
+    return {
+      ok: true,
+      cloudSaved: !!res?.cloudSaved,
+      cloudError: res?.cloudError ?? null,
+      sqliteSaved: !!res?.sqliteSaved,
+    };
   } catch (err) {
     console.warn("[visa-storage] Server save warning, retained in local persistence:", err);
+    return {
+      ok: true,
+      cloudSaved: false,
+      cloudError: err instanceof Error ? err.message : "Server save error",
+      sqliteSaved: false,
+    };
   }
 }
 

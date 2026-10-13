@@ -20,7 +20,12 @@ import {
   updateVisa,
   deleteVisa,
   clearAllVisas,
+  checkDbHealth,
+  syncAllLocalVisasToCloud,
+  readLocalVisas,
   type VisaRecord,
+  type DbHealthStatus,
+  type SaveVisaResult,
 } from "@/lib/visa-storage";
 const emblemAsset = { url: "/images/kuwait-emblem.webp" };
 
@@ -221,6 +226,51 @@ function AdminPanel() {
 
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [health, setHealth] = useState<DbHealthStatus | null>(null);
+  const [healthLoading, setHealthLoading] = useState(false);
+  const [cloudNotice, setCloudNotice] = useState<{ type: "success" | "warning"; message: string } | null>(null);
+  const [syncingLocal, setSyncingLocal] = useState(false);
+  const [localCount, setLocalCount] = useState(0);
+
+  async function runHealthCheck() {
+    setHealthLoading(true);
+    try {
+      const h = await checkDbHealth();
+      setHealth(h);
+    } catch {
+      setHealth(null);
+    } finally {
+      setHealthLoading(false);
+    }
+    setLocalCount(readLocalVisas().length);
+  }
+
+  useEffect(() => {
+    void runHealthCheck();
+  }, [refreshKey]);
+
+  async function handleSyncLocalToCloud() {
+    setSyncingLocal(true);
+    setCloudNotice(null);
+    try {
+      const res = await syncAllLocalVisasToCloud();
+      if (res.error) {
+        setCloudNotice({
+          type: "warning",
+          message: `Sync failed: ${res.error}. Please verify Supabase configuration in Vercel.`,
+        });
+      } else {
+        setCloudNotice({
+          type: "success",
+          message: `Successfully synced ${res.synced} visa record(s) to Supabase Cloud Database! They are now visible from all phones.`,
+        });
+        void runHealthCheck();
+        setRefreshKey((k) => k + 1);
+      }
+    } finally {
+      setSyncingLocal(false);
+    }
+  }
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -254,8 +304,10 @@ function AdminPanel() {
     };
     setSaving(true);
     setSaveError(null);
+    setCloudNotice(null);
+    let saveResult: SaveVisaResult | null = null;
     try {
-      await saveVisa(record);
+      saveResult = await saveVisa(record);
     } catch (err) {
       setSaving(false);
       setSaveError(
@@ -264,6 +316,17 @@ function AdminPanel() {
       return;
     }
     setSaving(false);
+    if (saveResult && saveResult.cloudSaved) {
+      setCloudNotice({
+        type: "success",
+        message: `✅ Visa #${record.id} saved to Supabase Cloud Database! Available immediately across all devices & phones.`,
+      });
+    } else {
+      setCloudNotice({
+        type: "warning",
+        message: `⚠️ Visa #${record.id} saved to THIS BROWSER ONLY. Cloud database sync is OFFLINE (${saveResult?.cloudError || "Supabase not connected"}). Other phones will say "User Not Found" until Supabase is configured in Vercel.`,
+      });
+    }
     const mrz = buildMRZ(record.name, record.passport, record.nationality, record.birthDate, record.gender, record.expiryDate);
     setPreview({
       ...record,
@@ -304,6 +367,91 @@ function AdminPanel() {
           <ArrowLeft className="h-4 w-4" />
           Back to home
         </Link>
+
+        {/* CLOUD DATABASE HEALTH STATUS BANNER */}
+        {health && (
+          <div className="mb-6">
+            {health.supabaseConnected ? (
+              <div className="rounded-xl border border-emerald-500/40 bg-emerald-950/40 p-4 text-emerald-200 shadow-md">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <span className="flex h-3 w-3 relative">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                    </span>
+                    <div>
+                      <p className="font-bold text-sm text-emerald-100">
+                        🟢 Cloud Database Online (Supabase) · Cross-Device Sync Active
+                      </p>
+                      <p className="text-xs text-emerald-300/80">
+                        All devices and phones share the same live database ({health.rowCount} visa record{health.rowCount !== 1 ? "s" : ""} saved).
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => void runHealthCheck()}
+                      disabled={healthLoading}
+                      className="rounded-lg bg-emerald-900/60 hover:bg-emerald-800/80 px-3 py-1.5 text-xs font-semibold text-emerald-200 border border-emerald-500/30 transition disabled:opacity-50"
+                    >
+                      {healthLoading ? "Checking..." : "Refresh Status"}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="rounded-xl border border-amber-500/40 bg-amber-950/50 p-5 text-amber-200 shadow-lg">
+                <div className="flex items-start gap-3">
+                  <AlertTriangle className="h-5 w-5 text-amber-400 shrink-0 mt-0.5" />
+                  <div className="flex-1 space-y-3">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <h4 className="font-bold text-sm text-amber-100">
+                        ⚠️ Cloud Database Disconnected — Visas Only Saved on This Phone/Browser!
+                      </h4>
+                      <div className="flex items-center gap-2">
+                        {localCount > 0 && (
+                          <button
+                            type="button"
+                            onClick={handleSyncLocalToCloud}
+                            disabled={syncingLocal}
+                            className="rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 px-3 py-1 text-xs font-bold transition shadow disabled:opacity-50"
+                          >
+                            {syncingLocal ? "Syncing..." : `Sync ${localCount} Local Visa${localCount > 1 ? "s" : ""} to Cloud`}
+                          </button>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => void runHealthCheck()}
+                          disabled={healthLoading}
+                          className="rounded-lg bg-amber-900/60 hover:bg-amber-800/80 px-3 py-1 text-xs font-medium text-amber-200 border border-amber-500/40 transition disabled:opacity-50"
+                        >
+                          {healthLoading ? "Checking..." : "Check Again"}
+                        </button>
+                      </div>
+                    </div>
+                    <p className="text-xs text-amber-200/90 leading-relaxed">
+                      <strong>Why other phones say "User Not Found":</strong> This Vercel deployment does not have Supabase credentials connected yet. Generated visas are temporarily stored in this browser only.
+                    </p>
+                    <div className="rounded-lg bg-slate-950/70 border border-amber-500/30 p-3.5 text-xs space-y-1.5 font-mono text-amber-100/90">
+                      <div className="font-bold text-yellow-300">How to fix in 2 minutes so all phones work:</div>
+                      <div>1. Open your <strong>Supabase Dashboard</strong> → SQL Editor → Paste & Run <code className="text-yellow-300">SUPABASE_SETUP.sql</code></div>
+                      <div>2. Open <strong>Vercel Settings → Environment Variables</strong> and add:</div>
+                      <div className="pl-4 text-emerald-300">• <code className="text-white">SUPABASE_URL</code> = your Supabase project URL</div>
+                      <div className="pl-4 text-emerald-300">• <code className="text-white">SUPABASE_SERVICE_ROLE_KEY</code> = your secret service role key (or anon key)</div>
+                      <div>3. Redeploy in Vercel, then click <strong>"Sync Local Visas to Cloud"</strong> above!</div>
+                    </div>
+                    {health.error && (
+                      <p className="text-xs text-red-300 font-mono">
+                        Error detail: {health.error}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
 
         <div className="generator-section">
           <h1 className="generator-title">Kuwait Ministry of Interior — وزارة الداخلية الكويتية</h1>
@@ -525,6 +673,31 @@ function AdminPanel() {
                 <span style={{ color: "#fca5a5", fontSize: "0.85rem" }}>
                   {saveError}
                 </span>
+              )}
+              {cloudNotice && (
+                <div
+                  style={{
+                    width: "100%",
+                    padding: "10px 14px",
+                    borderRadius: 8,
+                    fontSize: "0.85rem",
+                    marginTop: 8,
+                    background:
+                      cloudNotice.type === "success"
+                        ? "rgba(16, 185, 129, 0.15)"
+                        : "rgba(245, 158, 11, 0.15)",
+                    border:
+                      cloudNotice.type === "success"
+                        ? "1px solid rgba(16, 185, 129, 0.4)"
+                        : "1px solid rgba(245, 158, 11, 0.4)",
+                    color: cloudNotice.type === "success" ? "#6ee7b7" : "#fcd34d",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                  }}
+                >
+                  {cloudNotice.message}
+                </div>
               )}
             </div>
           </form>

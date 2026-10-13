@@ -94,9 +94,13 @@ export function sqliteLookupVisa(id: string): VisaRecord | null {
     const db = getSqliteDb();
     if (!db) return null;
     const clean = id.trim();
+    const upper = clean.toUpperCase();
+    const digits = clean.replace(/\D/g, "").slice(0, 6);
     const row = db
-      .prepare("SELECT * FROM visas WHERE UPPER(id) = ? OR UPPER(passport) = ? OR UPPER(tracker) = ? LIMIT 1")
-      .get(clean.toUpperCase()) as Record<string, unknown> | undefined;
+      .prepare(
+        "SELECT * FROM visas WHERE UPPER(id) = ? OR UPPER(id) = ? OR UPPER(passport) = ? OR UPPER(tracker) = ? OR UPPER(tracker) = ? LIMIT 1"
+      )
+      .get(upper, digits, upper, upper, digits) as Record<string, unknown> | undefined;
 
     if (!row) return null;
 
