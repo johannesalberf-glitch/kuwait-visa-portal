@@ -21,6 +21,7 @@ dist-ssr
 .nitro
 *.tsbuildinfo
 *.local
+*.db
 .workspace/
 
 # Wrangler / Cloudflare

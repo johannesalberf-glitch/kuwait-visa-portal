@@ -20,13 +20,8 @@ import {
   updateVisa,
   deleteVisa,
   clearAllVisas,
-  checkDbHealth,
-  syncAllLocalVisasToCloud,
-  readLocalVisas,
   encodeVisaToShareString,
   type VisaRecord,
-  type DbHealthStatus,
-  type SaveVisaResult,
 } from "@/lib/visa-storage";
 const emblemAsset = { url: "/images/kuwait-emblem.webp" };
 
@@ -227,53 +222,8 @@ function AdminPanel() {
 
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
-  const [health, setHealth] = useState<DbHealthStatus | null>(null);
-  const [healthLoading, setHealthLoading] = useState(false);
-  const [cloudNotice, setCloudNotice] = useState<{ type: "success" | "warning"; message: string } | null>(null);
-  const [syncingLocal, setSyncingLocal] = useState(false);
-  const [localCount, setLocalCount] = useState(0);
-
-  async function runHealthCheck() {
-    setHealthLoading(true);
-    try {
-      const h = await checkDbHealth();
-      setHealth(h);
-    } catch {
-      setHealth(null);
-    } finally {
-      setHealthLoading(false);
-    }
-    setLocalCount(readLocalVisas().length);
-  }
-
-  useEffect(() => {
-    void runHealthCheck();
-  }, [refreshKey]);
-
-  async function handleSyncLocalToCloud() {
-    setSyncingLocal(true);
-    setCloudNotice(null);
-    try {
-      const res = await syncAllLocalVisasToCloud();
-      if (res.error) {
-        setCloudNotice({
-          type: "warning",
-          message: `Sync failed: ${res.error}. Please verify Supabase configuration in Vercel.`,
-        });
-      } else {
-        setCloudNotice({
-          type: "success",
-          message: `Successfully synced ${res.synced} visa record(s) to Supabase Cloud Database! They are now visible from all phones.`,
-        });
-        void runHealthCheck();
-        setRefreshKey((k) => k + 1);
-      }
-    } finally {
-      setSyncingLocal(false);
-    }
-  }
-
-  const [copiedShare, setCopiedShare] = useState(false);
+  const [saveNotice, setSaveNotice] = useState<string | null>(null);
+  const [copiedField, setCopiedField] = useState<"otp" | "tracker" | "share" | null>(null);
 
   function getShareUrl(rec: VisaRecord) {
     if (typeof window === "undefined") return "";
@@ -281,28 +231,33 @@ function AdminPanel() {
     return `${window.location.origin}/#v=${encoded}`;
   }
 
+  function handleCopyText(text: string, field: "otp" | "tracker" | "share") {
+    navigator.clipboard.writeText(text);
+    setCopiedField(field);
+    setTimeout(() => setCopiedField(null), 2500);
+  }
+
   function handleCopyShareLink() {
     if (!preview) return;
     const url = getShareUrl(preview);
-    navigator.clipboard.writeText(url);
-    setCopiedShare(true);
-    setTimeout(() => setCopiedShare(false), 3000);
+    handleCopyText(url, "share");
   }
 
   function handleShareWhatsApp() {
     if (!preview) return;
     const url = getShareUrl(preview);
-    const msg = `State of Kuwait — Ministry of Interior\nElectronic Visa Verification\n\nApplicant: ${preview.name}\nOTP Number: ${preview.id}\nPassport: ${preview.passport}\n\nView Official eVisa:\n${url}`;
+    const msg = `State of Kuwait — Ministry of Interior\nElectronic Visa Verification\n\nApplicant: ${preview.name}\nOTP Code: ${preview.id}\nTracking Code: ${preview.tracker}\nPassport: ${preview.passport}\n\nView Official eVisa:\n${url}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, "_blank");
   }
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const fd = new FormData(e.currentTarget);
+    const formEl = e.currentTarget;
+    const fd = new FormData(formEl);
     const id = otpCode.replace(/\D/g, "").slice(0, 6);
     const tracker = trackerCode.replace(/\D/g, "").slice(0, 6);
     if (id.length !== 6 || tracker.length !== 6) {
-      setSaveError("OTP and Tracker must be exactly 6 digits.");
+      setSaveError("OTP Code and Tracking Code must be 6 digits.");
       return;
     }
     const reference =
@@ -311,15 +266,21 @@ function AdminPanel() {
       String.fromCharCode(65 + Math.floor(Math.random() * 26));
     const nationality = String(fd.get("nationality") ?? "");
     const visaType = String(fd.get("visaType") ?? "");
+    const nationalityAr = NATIONALITIES.find((n) => n.en === nationality)?.ar ?? "";
+    const visaTypeAr = VISA_TYPES.find((v) => v.en === visaType)?.ar ?? "";
     const record: VisaRecord = {
       id,
       tracker,
-      name: String(fd.get("name") ?? ""),
-      passport: String(fd.get("passport") ?? ""),
+      name: String(fd.get("name") ?? "").trim(),
+      nameAr: nameAr.trim() || undefined,
+      passport: String(fd.get("passport") ?? "").trim().toUpperCase(),
       nationality,
+      nationalityAr,
       gender: String(fd.get("gender") ?? ""),
       visaType,
-      occupation: String(fd.get("occupation") ?? ""),
+      visaTypeAr,
+      occupation: String(fd.get("occupation") ?? "").trim(),
+      occupationAr: occupationAr.trim() || undefined,
       birthDate: String(fd.get("birthDate") ?? ""),
       issueDate: String(fd.get("issueDate") ?? ""),
       expiryDate: String(fd.get("expiryDate") ?? ""),
@@ -328,10 +289,9 @@ function AdminPanel() {
     };
     setSaving(true);
     setSaveError(null);
-    setCloudNotice(null);
-    let saveResult: SaveVisaResult | null = null;
+    setSaveNotice(null);
     try {
-      saveResult = await saveVisa(record);
+      await saveVisa(record);
     } catch (err) {
       setSaving(false);
       setSaveError(
@@ -340,27 +300,29 @@ function AdminPanel() {
       return;
     }
     setSaving(false);
-    if (saveResult && saveResult.cloudSaved) {
-      setCloudNotice({
-        type: "success",
-        message: `✅ Visa #${record.id} saved to Supabase Cloud Database! Available immediately across all devices & phones.`,
-      });
-    } else {
-      setCloudNotice({
-        type: "warning",
-        message: `⚠️ Visa #${record.id} saved to THIS BROWSER ONLY. Cloud database sync is OFFLINE (${saveResult?.cloudError || "Supabase not connected"}). Other phones will say "User Not Found" until Supabase is configured in Vercel.`,
-      });
-    }
-    const mrz = buildMRZ(record.name, record.passport, record.nationality, record.birthDate, record.gender, record.expiryDate);
+    setSaveNotice(
+      `✓ User info saved! OTP Code: ${record.id} | Tracking Code: ${record.tracker} — Ready for instant lookup.`,
+    );
+    const mrz = buildMRZ(
+      record.name,
+      record.passport,
+      record.nationality,
+      record.birthDate,
+      record.gender,
+      record.expiryDate,
+    );
     setPreview({
       ...record,
       nameAr,
       occupationAr,
-      nationalityAr: NATIONALITIES.find((n) => n.en === nationality)?.ar ?? "",
-      visaTypeAr: VISA_TYPES.find((v) => v.en === visaType)?.ar ?? "",
+      nationalityAr,
+      visaTypeAr,
       reference,
       mrz,
     });
+    // Generate fresh codes for the next user entry so it won't overwrite this one
+    setOtpCode(generateVisaNumber());
+    setTrackerCode(generateTracker());
     setRefreshKey((k) => k + 1);
     setTimeout(() => {
       document.getElementById("visa-card-preview")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -373,6 +335,8 @@ function AdminPanel() {
     setDocuments([]);
     setNameAr("");
     setOccupationAr("");
+    setSaveNotice(null);
+    setSaveError(null);
     setOtpCode(generateVisaNumber());
     setTrackerCode(generateTracker());
     if (fileRef.current) fileRef.current.value = "";
@@ -389,104 +353,19 @@ function AdminPanel() {
           className="mb-6 inline-flex items-center gap-2 text-sm font-semibold text-[var(--mls-gold)] hover:underline"
         >
           <ArrowLeft className="h-4 w-4" />
-          Back to home
+          Back to home (Verify OTP / Tracking Code)
         </Link>
-
-        {/* CLOUD DATABASE HEALTH STATUS BANNER */}
-        {health && (
-          <div className="mb-6">
-            {health.supabaseConnected ? (
-              <div className="rounded-xl border border-emerald-500/40 bg-emerald-950/40 p-4 text-emerald-200 shadow-md">
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                  <div className="flex items-center gap-3">
-                    <span className="flex h-3 w-3 relative">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
-                    </span>
-                    <div>
-                      <p className="font-bold text-sm text-emerald-100">
-                        🟢 Cloud Database Online (Supabase) · Cross-Device Sync Active
-                      </p>
-                      <p className="text-xs text-emerald-300/80">
-                        All devices and phones share the same live database ({health.rowCount} visa record{health.rowCount !== 1 ? "s" : ""} saved).
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => void runHealthCheck()}
-                      disabled={healthLoading}
-                      className="rounded-lg bg-emerald-900/60 hover:bg-emerald-800/80 px-3 py-1.5 text-xs font-semibold text-emerald-200 border border-emerald-500/30 transition disabled:opacity-50"
-                    >
-                      {healthLoading ? "Checking..." : "Refresh Status"}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="rounded-xl border border-amber-500/40 bg-amber-950/50 p-5 text-amber-200 shadow-lg">
-                <div className="flex items-start gap-3">
-                  <AlertTriangle className="h-5 w-5 text-amber-400 shrink-0 mt-0.5" />
-                  <div className="flex-1 space-y-3">
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <h4 className="font-bold text-sm text-amber-100">
-                        ⚠️ Cloud Database Disconnected — Visas Only Saved on This Phone/Browser!
-                      </h4>
-                      <div className="flex items-center gap-2">
-                        {localCount > 0 && (
-                          <button
-                            type="button"
-                            onClick={handleSyncLocalToCloud}
-                            disabled={syncingLocal}
-                            className="rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 px-3 py-1 text-xs font-bold transition shadow disabled:opacity-50"
-                          >
-                            {syncingLocal ? "Syncing..." : `Sync ${localCount} Local Visa${localCount > 1 ? "s" : ""} to Cloud`}
-                          </button>
-                        )}
-                        <button
-                          type="button"
-                          onClick={() => void runHealthCheck()}
-                          disabled={healthLoading}
-                          className="rounded-lg bg-amber-900/60 hover:bg-amber-800/80 px-3 py-1 text-xs font-medium text-amber-200 border border-amber-500/40 transition disabled:opacity-50"
-                        >
-                          {healthLoading ? "Checking..." : "Check Again"}
-                        </button>
-                      </div>
-                    </div>
-                    <p className="text-xs text-amber-200/90 leading-relaxed">
-                      <strong>Why other phones say "User Not Found":</strong> This Vercel deployment does not have Supabase credentials connected yet. Generated visas are temporarily stored in this browser only.
-                    </p>
-                    <div className="rounded-lg bg-slate-950/70 border border-amber-500/30 p-3.5 text-xs space-y-1.5 font-mono text-amber-100/90">
-                      <div className="font-bold text-yellow-300">How to fix in 2 minutes so all phones work:</div>
-                      <div>1. Open your <strong>Supabase Dashboard</strong> → SQL Editor → Paste & Run <code className="text-yellow-300">SUPABASE_SETUP.sql</code></div>
-                      <div>2. Open <strong>Vercel Settings → Environment Variables</strong> and add:</div>
-                      <div className="pl-4 text-emerald-300">• <code className="text-white">SUPABASE_URL</code> = your Supabase project URL</div>
-                      <div className="pl-4 text-emerald-300">• <code className="text-white">SUPABASE_SERVICE_ROLE_KEY</code> = your secret service role key (or anon key)</div>
-                      <div>3. Redeploy in Vercel, then click <strong>"Sync Local Visas to Cloud"</strong> above!</div>
-                    </div>
-                    {health.error && (
-                      <p className="text-xs text-red-300 font-mono">
-                        Error detail: {health.error}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
 
         <div className="generator-section">
           <h1 className="generator-title">Kuwait Ministry of Interior — وزارة الداخلية الكويتية</h1>
           <p className="generator-subtitle">
-            Electronic Visa ID Generator · مولّد بطاقة التأشيرة الإلكترونية
+            Electronic Visa ID Generator · Create User Info &amp; Issue OTP / Tracking Code
           </p>
 
           <form onSubmit={onSubmit}>
             <div className="form-grid">
               <div className="form-group">
-                <label>OTP Number · رمز التحقق (6 digits)</label>
+                <label>OTP Code · رمز التحقق (6 digits)</label>
                 <div style={{ display: "flex", gap: 8 }}>
                   <input
                     type="text"
@@ -496,7 +375,7 @@ function AdminPanel() {
                     value={otpCode}
                     onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
                     placeholder="6-digit OTP"
-                    style={{ flex: 1 }}
+                    style={{ flex: 1, fontFamily: "ui-monospace, monospace", fontWeight: 700, letterSpacing: 2 }}
                   />
                   <button
                     type="button"
@@ -509,7 +388,7 @@ function AdminPanel() {
                 </div>
               </div>
               <div className="form-group">
-                <label>Database Tracker · معرّف قاعدة البيانات (6 digits)</label>
+                <label>Tracking Code · رقم التتبع (6 digits)</label>
                 <div style={{ display: "flex", gap: 8 }}>
                   <input
                     type="text"
@@ -518,8 +397,8 @@ function AdminPanel() {
                     required
                     value={trackerCode}
                     onChange={(e) => setTrackerCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                    placeholder="6-digit tracker"
-                    style={{ flex: 1 }}
+                    placeholder="6-digit tracking code"
+                    style={{ flex: 1, fontFamily: "ui-monospace, monospace", fontWeight: 700, letterSpacing: 2 }}
                   />
                   <button
                     type="button"
@@ -569,7 +448,7 @@ function AdminPanel() {
               </div>
               <div className="form-group">
                 <label>Date of Birth · تاريخ الميلاد</label>
-                <input name="birthDate" type="date" required />
+                <input name="birthDate" type="date" defaultValue="1994-05-15" required />
               </div>
               <div className="form-group">
                 <label>Gender · الجنس</label>
@@ -612,11 +491,21 @@ function AdminPanel() {
               </div>
               <div className="form-group">
                 <label>Issue Date · تاريخ الإصدار</label>
-                <input name="issueDate" type="date" required />
+                <input
+                  name="issueDate"
+                  type="date"
+                  defaultValue={new Date().toISOString().slice(0, 10)}
+                  required
+                />
               </div>
               <div className="form-group">
                 <label>Expiry Date · تاريخ الانتهاء</label>
-                <input name="expiryDate" type="date" required />
+                <input
+                  name="expiryDate"
+                  type="date"
+                  defaultValue={new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10)}
+                  required
+                />
               </div>
             </div>
 
@@ -686,11 +575,11 @@ function AdminPanel() {
                 disabled={saving}
                 style={saving ? { opacity: 0.6, cursor: "wait" } : undefined}
               >
-                {saving ? "Saving to Database…" : "Generate eVisa Card"}
+                {saving ? "Saving User Info…" : "Save User & Generate OTP / Tracking Code"}
               </button>
               {preview && (
                 <button type="button" className="btn-reset" onClick={resetAll}>
-                  Reset
+                  Clear Form
                 </button>
               )}
               {saveError && (
@@ -698,29 +587,23 @@ function AdminPanel() {
                   {saveError}
                 </span>
               )}
-              {cloudNotice && (
+              {saveNotice && (
                 <div
                   style={{
                     width: "100%",
                     padding: "10px 14px",
                     borderRadius: 8,
-                    fontSize: "0.85rem",
+                    fontSize: "0.88rem",
                     marginTop: 8,
-                    background:
-                      cloudNotice.type === "success"
-                        ? "rgba(16, 185, 129, 0.15)"
-                        : "rgba(245, 158, 11, 0.15)",
-                    border:
-                      cloudNotice.type === "success"
-                        ? "1px solid rgba(16, 185, 129, 0.4)"
-                        : "1px solid rgba(245, 158, 11, 0.4)",
-                    color: cloudNotice.type === "success" ? "#6ee7b7" : "#fcd34d",
+                    background: "rgba(16, 185, 129, 0.15)",
+                    border: "1px solid rgba(16, 185, 129, 0.4)",
+                    color: "#6ee7b7",
                     display: "flex",
                     alignItems: "center",
                     gap: 8,
                   }}
                 >
-                  {cloudNotice.message}
+                  {saveNotice}
                 </div>
               )}
             </div>
@@ -729,6 +612,93 @@ function AdminPanel() {
 
         {preview && (
           <div id="visa-card-preview" className="my-8">
+            {/* Issued Codes Banner */}
+            <div className="mb-6 rounded-2xl border border-emerald-500/40 bg-emerald-950/50 p-5 text-[#f5f0e6] shadow-xl">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                  <div className="inline-flex items-center gap-2 text-emerald-300 font-bold text-sm mb-1">
+                    <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                    <span>New User Record Saved — Codes Ready for Verification</span>
+                  </div>
+                  <p className="text-xs text-gray-300 m-0">
+                    Enter either the <strong>OTP Code</strong> or <strong>Tracking Code</strong> on the Home page tracker to display <strong>{preview.name}</strong>&apos;s visa record.
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <Link
+                    to="/"
+                    search={{ code: preview.id } as never}
+                    className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-3.5 py-2 text-xs font-bold transition shadow"
+                  >
+                    Test OTP Lookup ({preview.id}) ↗
+                  </Link>
+                  <Link
+                    to="/"
+                    search={{ code: preview.tracker } as never}
+                    className="inline-flex items-center gap-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 px-3.5 py-2 text-xs font-bold transition shadow"
+                  >
+                    Test Tracking Code ({preview.tracker}) ↗
+                  </Link>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4">
+                <div className="rounded-xl bg-[#0a1628]/80 border border-[rgba(201,168,76,0.35)] p-3.5 flex items-center justify-between">
+                  <div>
+                    <span className="block text-[10px] uppercase tracking-wider text-gray-400 font-semibold">
+                      OTP Code (6-Digit)
+                    </span>
+                    <span className="font-mono text-xl font-extrabold text-[var(--mls-gold-bright)] tracking-widest">
+                      {preview.id}
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleCopyText(preview.id, "otp")}
+                    className="rounded-lg bg-[rgba(201,168,76,0.18)] hover:bg-[rgba(201,168,76,0.3)] border border-[rgba(201,168,76,0.4)] px-3 py-1.5 text-xs font-bold text-[var(--mls-gold-bright)] transition cursor-pointer"
+                  >
+                    {copiedField === "otp" ? "✓ Copied" : "Copy OTP"}
+                  </button>
+                </div>
+
+                <div className="rounded-xl bg-[#0a1628]/80 border border-[rgba(201,168,76,0.35)] p-3.5 flex items-center justify-between">
+                  <div>
+                    <span className="block text-[10px] uppercase tracking-wider text-gray-400 font-semibold">
+                      Tracking Code (6-Digit)
+                    </span>
+                    <span className="font-mono text-xl font-extrabold text-emerald-300 tracking-widest">
+                      {preview.tracker}
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleCopyText(preview.tracker, "tracker")}
+                    className="rounded-lg bg-emerald-900/50 hover:bg-emerald-800/70 border border-emerald-500/40 px-3 py-1.5 text-xs font-bold text-emerald-200 transition cursor-pointer"
+                  >
+                    {copiedField === "tracker" ? "✓ Copied" : "Copy Tracker"}
+                  </button>
+                </div>
+
+                <div className="rounded-xl bg-[#0a1628]/80 border border-[rgba(201,168,76,0.35)] p-3.5 flex items-center justify-between">
+                  <div>
+                    <span className="block text-[10px] uppercase tracking-wider text-gray-400 font-semibold">
+                      Passport Number
+                    </span>
+                    <span className="font-mono text-lg font-extrabold text-white tracking-wider">
+                      {preview.passport}
+                    </span>
+                  </div>
+                  <Link
+                    to="/visa/$id"
+                    params={{ id: preview.id }}
+                    className="rounded-lg bg-blue-900/50 hover:bg-blue-800/70 border border-blue-500/40 px-3 py-1.5 text-xs font-bold text-blue-200 transition"
+                  >
+                    Direct Page ↗
+                  </Link>
+                </div>
+              </div>
+            </div>
+
             <VisaResult record={preview} celebrate={true} />
             <div style={{ display: "flex", gap: 12, marginTop: 24, justifyContent: "center", alignItems: "center", flexWrap: "wrap" }}>
               <button className="btn-print" onClick={() => window.print()}>
@@ -739,14 +709,15 @@ function AdminPanel() {
                 onClick={handleCopyShareLink}
                 className="btn-print"
                 style={{
-                  background: copiedShare
-                    ? "#10b981"
-                    : "linear-gradient(135deg, #1a5f9e 0%, #0d3d66 100%)",
-                  borderColor: copiedShare ? "#10b981" : "rgba(201,168,76,0.5)",
+                  background:
+                    copiedField === "share"
+                      ? "#10b981"
+                      : "linear-gradient(135deg, #1a5f9e 0%, #0d3d66 100%)",
+                  borderColor: copiedField === "share" ? "#10b981" : "rgba(201,168,76,0.5)",
                   color: "#fff",
                 }}
               >
-                {copiedShare ? "✓ Direct Link Copied!" : "📋 Copy Direct Link (For Any Phone)"}
+                {copiedField === "share" ? "✓ Direct Link Copied!" : "📋 Copy Direct Share Link"}
               </button>
               <button
                 type="button"
@@ -762,11 +733,8 @@ function AdminPanel() {
                 📲 Share on WhatsApp
               </button>
               <div className="issued-badge">
-                OTP: <strong>{preview.id}</strong> · Database Tracker: <strong>{preview.tracker}</strong>
+                OTP: <strong>{preview.id}</strong> · Tracking Code: <strong>{preview.tracker}</strong>
               </div>
-            </div>
-            <div className="mt-3 text-center text-xs text-amber-200/90 max-w-lg mx-auto">
-              💡 <strong>Instant Cross-Device Sharing:</strong> Send this Direct Link to the user on WhatsApp or SMS. It immediately opens their official visa on any phone, with zero database setup required!
             </div>
           </div>
         )}
@@ -781,6 +749,7 @@ function AdminPanel() {
 }
 
 type EditFields = {
+  tracker: string;
   name: string;
   nameAr?: string;
   passport: string;
@@ -834,6 +803,7 @@ function VisaManager({
   function openEdit(r: VisaRecord) {
     setEditing(r);
     setForm({
+      tracker: r.tracker || r.id,
       name: r.name,
       passport: r.passport,
       nationality: r.nationality,
@@ -899,6 +869,7 @@ function VisaManager({
     if (!q) return true;
     return (
       (r.id && r.id.toLowerCase().includes(q)) ||
+      (r.tracker && r.tracker.toLowerCase().includes(q)) ||
       (r.name && r.name.toLowerCase().includes(q)) ||
       (r.passport && r.passport.toLowerCase().includes(q)) ||
       (r.nationality && r.nationality.toLowerCase().includes(q)) ||
@@ -1083,11 +1054,16 @@ function VisaManager({
                 key={r.id}
                 className="p-4 rounded-xl border border-[rgba(201,168,76,0.25)] bg-[rgba(10,22,40,0.6)] shadow-lg hover:border-[rgba(201,168,76,0.4)] transition"
               >
-                {/* Header: OTP & Status */}
-                <div className="flex justify-between items-center mb-2">
-                  <span className="font-mono text-xs font-bold text-[var(--mls-gold-bright)] bg-[rgba(201,168,76,0.15)] px-2.5 py-1 rounded-md border border-[rgba(201,168,76,0.3)]">
-                    OTP: {r.id}
-                  </span>
+                {/* Header: OTP, Tracker & Status */}
+                <div className="flex flex-wrap justify-between items-center gap-2 mb-2">
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-xs font-bold text-[var(--mls-gold-bright)] bg-[rgba(201,168,76,0.15)] px-2.5 py-1 rounded-md border border-[rgba(201,168,76,0.3)]">
+                      OTP: {r.id}
+                    </span>
+                    <span className="font-mono text-xs font-bold text-emerald-300 bg-emerald-950/40 px-2.5 py-1 rounded-md border border-emerald-500/30">
+                      Tracker: {r.tracker || r.id}
+                    </span>
+                  </div>
                   <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-300 bg-emerald-950/40 border border-emerald-500/30 px-2 py-0.5 rounded-full">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
                     APPROVED
@@ -1174,7 +1150,8 @@ function VisaManager({
             <table style={{ width: "100%", borderCollapse: "collapse", color: "#f5f0e6", fontSize: "0.85rem" }}>
               <thead>
                 <tr style={{ textAlign: "left", color: "var(--mls-gold)", borderBottom: "1px solid rgba(201,168,76,0.3)", background: "rgba(201,168,76,0.06)" }}>
-                  <th style={{ padding: "12px 10px" }}>OTP</th>
+                  <th style={{ padding: "12px 10px" }}>OTP Code</th>
+                  <th style={{ padding: "12px 10px" }}>Tracking Code</th>
                   <th style={{ padding: "12px 10px" }}>Applicant Name</th>
                   <th style={{ padding: "12px 10px" }}>Passport</th>
                   <th style={{ padding: "12px 10px" }}>Nationality</th>
@@ -1193,24 +1170,23 @@ function VisaManager({
                     <td style={{ padding: "12px 10px", fontFamily: "ui-monospace, monospace", fontWeight: 700, color: "var(--mls-gold-bright)" }}>
                       {r.id}
                     </td>
+                    <td style={{ padding: "12px 10px", fontFamily: "ui-monospace, monospace", fontWeight: 700, color: "#6ee7b7" }}>
+                      {r.tracker || r.id}
+                    </td>
                     <td style={{ padding: "12px 10px", fontWeight: 600 }}>{r.name}</td>
                     <td style={{ padding: "12px 10px", fontFamily: "ui-monospace, monospace" }}>{r.passport}</td>
                     <td style={{ padding: "12px 10px" }}>{r.nationality}</td>
                     <td style={{ padding: "12px 10px", color: "#fde68a" }}>{r.visaType}</td>
                     <td style={{ padding: "12px 10px", fontFamily: "ui-monospace, monospace" }}>{fmtDate(r.expiryDate)}</td>
                     <td style={{ padding: "12px 10px", textAlign: "right", whiteSpace: "nowrap" }}>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const url = `${window.location.origin}/#v=${encodeVisaToShareString(r)}`;
-                          navigator.clipboard.writeText(url);
-                          setSuccessMsg(`Direct Link for Visa #${r.id} copied! Send this to the user.`);
-                        }}
-                        className="inline-flex items-center gap-1 text-emerald-300 hover:text-white px-2 py-1 rounded bg-emerald-900/30 border border-emerald-500/30 mr-2 cursor-pointer text-xs"
-                        title="Copy Direct Verification Link (Works on any phone)"
+                      <Link
+                        to="/"
+                        search={{ code: r.id } as never}
+                        className="inline-flex items-center gap-1 text-emerald-300 hover:text-white px-2 py-1 rounded bg-emerald-900/30 border border-emerald-500/30 mr-2 text-xs font-semibold"
+                        title="Test lookup on Home page"
                       >
-                        📋 Copy Link
-                      </button>
+                        🔍 Test Lookup
+                      </Link>
                       <Link
                         to="/visa/$id"
                         params={{ id: r.id }}
@@ -1373,12 +1349,24 @@ function VisaManager({
 
             <div className="form-grid">
               {/* Full Name */}
-              <div className="form-group sm:col-span-2">
+              <div className="form-group">
                 <label>Full Name (English)</label>
                 <input
                   type="text"
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  required
+                />
+              </div>
+
+              {/* Tracking Code */}
+              <div className="form-group">
+                <label>Tracking Code (6 digits)</label>
+                <input
+                  type="text"
+                  maxLength={6}
+                  value={form.tracker}
+                  onChange={(e) => setForm({ ...form, tracker: e.target.value.replace(/\D/g, "").slice(0, 6) })}
                   required
                 />
               </div>
@@ -1775,6 +1763,7 @@ const css = `
 .mols-admin .info-value.highlight {
   font-family: 'JetBrains Mono', ui-monospace, monospace;
   font-size: 1.05rem; font-weight: 700; color: var(--mls-blue); letter-spacing: 1px;
+  background: transparent !important; padding: 0 !important;
 }
 .mols-admin .info-value.date-block {
   font-family: 'JetBrains Mono', ui-monospace, monospace;

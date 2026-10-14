@@ -10,21 +10,21 @@ export function VisaLookup() {
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const id = (inputRef.current?.value ?? "").trim();
-    if (id.length !== 6) {
-      setError("Please enter a valid 6-digit OTP number.");
+    const query = (inputRef.current?.value ?? "").trim();
+    if (!query) {
+      setError("Please enter a valid OTP code, Tracking code, or Passport number.");
       return;
     }
     setLoading(true);
     setError(null);
     try {
-      const found = await findVisa(id);
+      const found = await findVisa(query);
       if (!found) {
         setError("Visa Record Not Found");
         setLoading(false);
         return;
       }
-      await navigate({ to: "/visa/$id", params: { id } });
+      await navigate({ to: "/visa/$id", params: { id: found.id } });
     } catch {
       setError("Lookup failed. Please try again.");
       setLoading(false);
@@ -33,20 +33,14 @@ export function VisaLookup() {
 
   return (
     <div className="mx-auto w-full max-w-xl animate-in fade-in duration-300 rounded-2xl bg-white p-8 shadow-xl">
-      <h3 className="text-center text-2xl font-bold text-[#0b2a6b]">OTP Number</h3>
+      <h3 className="text-center text-2xl font-bold text-[#0b2a6b]">OTP or Tracking Code</h3>
       <form onSubmit={onSubmit} className="mt-6 space-y-4">
         <input
           ref={inputRef}
           name="otp"
           type="text"
-          inputMode="numeric"
-          pattern="\d{6}"
-          maxLength={6}
           defaultValue=""
-          onChange={(e) => {
-            e.currentTarget.value = e.currentTarget.value.replace(/\D/g, "").slice(0, 6);
-          }}
-          placeholder="Enter 6-Digit OTP Number"
+          placeholder="Enter 6-Digit OTP or Tracking Code"
           className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-base tracking-widest text-gray-900 outline-none transition focus:border-blue-800 focus:ring-2 focus:ring-blue-200"
         />
         {error && (

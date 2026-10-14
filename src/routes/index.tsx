@@ -160,23 +160,21 @@ function KuwaitVisaPortalLanding() {
     }
   }, []);
 
-  // Direct Verification Link Handler (#v=... or ?v=...)
-  // Allows users on any phone to instantly see their verified visa without any database!
+  // Direct Verification Link Handler (#v=... or ?v=... or ?code=...)
   useEffect(() => {
     if (typeof window === "undefined") return;
     let param = "";
     const hash = window.location.hash;
+    const sp = new URLSearchParams(window.location.search);
     if (hash.startsWith("#v=") || hash.startsWith("#visa=")) {
       param = hash.replace(/^#(v|visa)=/, "");
     } else {
-      const sp = new URLSearchParams(window.location.search);
       param = sp.get("v") || sp.get("visa") || "";
     }
 
     if (param) {
       const rec = decodeVisaFromShareString(param);
       if (rec) {
-        // Auto-save into this phone's localStorage so it stays available forever
         const existing = readLocalVisas().filter((v) => v.id !== rec.id);
         existing.unshift(rec);
         writeLocalVisas(existing);
@@ -187,7 +185,15 @@ function KuwaitVisaPortalLanding() {
         setTimeout(() => {
           trackerResultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
         }, 250);
+        return;
       }
+    }
+
+    const codeParam = sp.get("code") || sp.get("otp") || sp.get("tracker") || "";
+    if (codeParam.trim()) {
+      const cleanCode = codeParam.trim();
+      setTopInput(cleanCode);
+      void handleSearch(cleanCode);
     }
   }, []);
 
@@ -222,17 +228,13 @@ function KuwaitVisaPortalLanding() {
     setLoading(true);
     setSearchError(null);
 
-    const cleanOtp = query.replace(/\D/g, "").slice(0, 6);
-
     try {
-      // 1. First attempt exact 6-digit OTP search in database
-      let res: VisaRecord | null = null;
-      if (cleanOtp.length === 6) {
-        res = await findVisa(cleanOtp);
-      }
-      // 2. Also attempt direct query (tracker or passport lookup)
-      if (!res && query.length >= 3) {
-        res = await findVisa(query);
+      let res = await findVisa(query);
+      if (!res) {
+        const cleanDigits = query.replace(/\D/g, "").slice(0, 6);
+        if (cleanDigits.length === 6 && cleanDigits !== query) {
+          res = await findVisa(cleanDigits);
+        }
       }
 
       if (res) {
@@ -242,14 +244,13 @@ function KuwaitVisaPortalLanding() {
           trackerResultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
         }, 150);
       } else {
-        // Fallback: If not found in DB with that specific code, show clear guidance
         setSearchError(
-          `No visa record found for code "${query}". Please check the 6-digit OTP number or create one in the Admin portal.`,
+          `No visa record found for "${query}". Please check your 6-digit OTP code, Tracking code, or create one in the Admin portal.`,
         );
         setShowResult(false);
       }
     } catch {
-      setSearchError("Unable to verify visa at this time. Please check your connection and try again.");
+      setSearchError("Unable to verify visa at this time. Please try again.");
       setShowResult(false);
     } finally {
       setLoading(false);
@@ -268,15 +269,14 @@ function KuwaitVisaPortalLanding() {
 
     setModalLoading(true);
     setModalError(null);
-    const cleanOtp = query.replace(/\D/g, "").slice(0, 6);
 
     try {
-      let res: VisaRecord | null = null;
-      if (cleanOtp.length === 6) {
-        res = await findVisa(cleanOtp);
-      }
-      if (!res && query.length >= 3) {
-        res = await findVisa(query);
+      let res = await findVisa(query);
+      if (!res) {
+        const cleanDigits = query.replace(/\D/g, "").slice(0, 6);
+        if (cleanDigits.length === 6 && cleanDigits !== query) {
+          res = await findVisa(cleanDigits);
+        }
       }
 
       if (res) {
@@ -288,7 +288,7 @@ function KuwaitVisaPortalLanding() {
         }, 150);
         return;
       }
-      setModalError(`No record found for "${query}". Please check the 6-digit OTP number.`);
+      setModalError(`No record found for "${query}". Please check your 6-digit OTP code or Tracking code.`);
     } catch {
       setModalError("Verification service temporarily unavailable.");
     } finally {
@@ -368,10 +368,10 @@ function KuwaitVisaPortalLanding() {
                     Electronic Visa &amp; Code Tracker
                   </h4>
                   <p className="mb-0 text-muted" style={{ fontSize: "0.95rem" }}>
-                    Enter any 6-digit OTP number or passport code to verify official visa records and view issued electronic card
+                    Enter your 6-digit OTP code, Tracking code, or Passport number to verify official visa records and view issued electronic card
                   </p>
                 </div>
-                <div className="d-flex gap-2">
+                <div className="d-flex gap-2 align-items-center">
                   <span
                     className="badge rounded-pill px-3 py-2 text-xs font-semibold"
                     style={{ background: "rgba(37, 176, 3, 0.1)", color: "#1C6C09", border: "1px solid #90D67F", fontSize: "0.9rem" }}
@@ -395,7 +395,7 @@ function KuwaitVisaPortalLanding() {
                       fontWeight: 700,
                       textTransform: "uppercase",
                     }}
-                    placeholder="Enter 6-Digit OTP Number (e.g. 582914, 847192)..."
+                    placeholder="Enter 6-Digit OTP Code or Tracking Code (e.g. 582914)..."
                     required
                   />
                 </div>
@@ -1015,14 +1015,14 @@ function KuwaitVisaPortalLanding() {
                   <button type="button" className="btn-close" onClick={() => setModal(null)}>✕</button>
                 </div>
                 <p className="text-muted">
-                  Enter your 6-digit OTP code below to look up your visa record.
+                  Enter your 6-digit OTP code, Tracking code, or Passport number below to look up your visa record.
                 </p>
                 <form onSubmit={handleModalVerify} className="mt-3">
                   <input
                     type="text"
                     value={modalInput}
                     onChange={(e) => setModalInput(e.target.value)}
-                    placeholder="Enter 6-digit OTP (e.g. 847192)..."
+                    placeholder="Enter OTP Code or Tracking Code (e.g. 847192)..."
                     className="form-control px-4 py-3 rounded-4 font-monospace font-bold mb-3"
                     style={{ border: "2px solid #009FDB", fontSize: "1.1rem" }}
                     required
