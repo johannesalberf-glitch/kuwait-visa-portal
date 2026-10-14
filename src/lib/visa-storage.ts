@@ -2,22 +2,17 @@ import {
   lookupVisaFn,
   listVisasFn,
   saveVisaFn,
-  syncBulkVisasFn,
-  getDbHealthFn,
   updateVisaFn,
   deleteVisaFn,
   clearAllVisasFn,
   type VisaRecord,
   type VisaDocument,
-  type DbHealthStatus,
 } from "./visa-storage.functions";
 
-export type { VisaRecord, VisaDocument, DbHealthStatus };
+export type { VisaRecord, VisaDocument };
 
 export type SaveVisaResult = {
   ok: boolean;
-  cloudSaved: boolean;
-  cloudError: string | null;
   sqliteSaved: boolean;
 };
 
@@ -45,93 +40,99 @@ export function writeLocalVisas(records: VisaRecord[]): void {
   }
 }
 
-export async function checkDbHealth(): Promise<DbHealthStatus> {
-  try {
-    return await getDbHealthFn();
-  } catch (e) {
-    return {
-      supabaseConfigured: false,
-      supabaseConnected: false,
-      supabaseUrl: null,
-      tableExists: false,
-      rowCount: 0,
-      error: e instanceof Error ? e.message : "Health check failed",
-      mode: "local_only",
-    };
-  }
-}
+function matchesQuery(record: VisaRecord, rawQuery: string): boolean {
+  const clean = rawQuery.trim();
+  if (!clean) return false;
+  const upper = clean.toUpperCase();
+  const digits = clean.replace(/\D/g, "");
 
-export async function syncAllLocalVisasToCloud(): Promise<{ synced: number; error: string | null }> {
-  const local = readLocalVisas();
-  if (!local.length) return { synced: 0, error: null };
-  try {
-    return await syncBulkVisasFn({ data: { records: local } });
-  } catch (e) {
-    return { synced: 0, error: e instanceof Error ? e.message : "Bulk sync failed" };
+  const idUpper = (record.id ?? "").trim().toUpperCase();
+  const trackerUpper = (record.tracker ?? "").trim().toUpperCase();
+  const passportUpper = (record.passport ?? "").trim().toUpperCase();
+
+  if (idUpper && idUpper === upper) return true;
+  if (trackerUpper && trackerUpper === upper) return true;
+  if (passportUpper && passportUpper === upper) return true;
+
+  if (digits.length === 6) {
+    if (idUpper === digits || trackerUpper === digits) return true;
   }
+
+  return false;
 }
 
 export async function saveVisa(record: VisaRecord): Promise<SaveVisaResult> {
-  // 1. Immediately persist to browser localStorage so records are NEVER lost when app/tab is closed
-  const existing = readLocalVisas().filter((v) => v.id !== record.id);
-  existing.unshift(record);
+  const normalized: VisaRecord = {
+    ...record,
+    id: (record.id ?? "").trim(),
+    tracker: (record.tracker ?? "").trim(),
+    passport: (record.passport ?? "").trim(),
+  };
+
+  // 1. Immediately persist to browser localStorage
+  const existing = readLocalVisas().filter((v) => v.id !== normalized.id);
+  existing.unshift(normalized);
   writeLocalVisas(existing);
 
-  // 2. Persist to server / cloud database
+  // 2. Persist to server SQLite database
   try {
-    const res = await saveVisaFn({ data: { record } });
+    const res = await saveVisaFn({ data: { record: normalized } });
     return {
       ok: true,
-      cloudSaved: !!res?.cloudSaved,
-      cloudError: res?.cloudError ?? null,
       sqliteSaved: !!res?.sqliteSaved,
     };
   } catch (err) {
     console.warn("[visa-storage] Server save warning, retained in local persistence:", err);
     return {
       ok: true,
-      cloudSaved: false,
-      cloudError: err instanceof Error ? err.message : "Server save error",
       sqliteSaved: false,
     };
   }
 }
 
-export async function findVisa(id: string): Promise<VisaRecord | null> {
-  const clean = id.trim().toUpperCase();
+export async function findVisa(query: string): Promise<VisaRecord | null> {
+  const clean = (query ?? "").trim();
+  if (!clean) return null;
 
-  // 1. Query server first
+  // 1. Check local cache first for immediate responsiveness and to preserve full blobs
+  const localList = readLocalVisas();
+  const localMatch = localList.find((v) => matchesQuery(v, clean)) ?? null;
+
+  // 2. Query server SQLite database
   try {
     const res = await lookupVisaFn({ data: { id: clean } });
     if (res?.record) {
-      // Sync found record into local cache
-      const existing = readLocalVisas().filter((v) => v.id !== res.record!.id);
-      existing.unshift(res.record);
+      const mergedRecord: VisaRecord = {
+        ...localMatch,
+        ...res.record,
+        photo: res.record.photo || localMatch?.photo || null,
+        documents:
+          res.record.documents && res.record.documents.length > 0
+            ? res.record.documents
+            : (localMatch?.documents ?? []),
+      };
+      const existing = localList.filter((v) => v.id !== mergedRecord.id);
+      existing.unshift(mergedRecord);
       writeLocalVisas(existing);
-      return res.record;
+      return mergedRecord;
     }
   } catch (err) {
-    console.warn("[visa-storage] Server lookup error, falling back to local cache:", err);
+    console.warn("[visa-storage] Server lookup error, using local cache:", err);
   }
 
-  // 2. Fallback to local storage (e.g. if server container reset)
-  const localList = readLocalVisas();
-  const match = localList.find((v) => {
-    return (
-      (v.id && v.id.toUpperCase() === clean) ||
-      (v.passport && v.passport.toUpperCase() === clean) ||
-      (v.tracker && v.tracker.toUpperCase() === clean)
-    );
-  });
+  // 3. If found in local storage but server didn't have it, sync it back to server
+  if (localMatch) {
+    saveVisaFn({ data: { record: localMatch } }).catch(() => {});
+    return localMatch;
+  }
 
-  return match ?? null;
+  return null;
 }
 
 export async function listVisas(): Promise<VisaRecord[]> {
   let serverRecords: VisaRecord[] = [];
   let serverOk = false;
 
-  // 1. Fetch from server
   try {
     const res = await listVisasFn();
     serverRecords = res.records || [];
@@ -140,27 +141,41 @@ export async function listVisas(): Promise<VisaRecord[]> {
     console.warn("[visa-storage] Server list error, loading from local cache:", err);
   }
 
-  // 2. Merge with browser localStorage so records are preserved across app close / serverless restart
   const localRecords = readLocalVisas();
-  const map = new Map<string, VisaRecord>();
-
-  // Add server records
-  for (const r of serverRecords) {
-    if (r && r.id) map.set(r.id, r);
+  const localMap = new Map<string, VisaRecord>();
+  for (const r of localRecords) {
+    if (r && r.id) localMap.set(r.id, r);
   }
 
-  // Add any local records that the server may have lost
+  const mergedMap = new Map<string, VisaRecord>();
+
+  // Add server records, preserving any richer local fields (photo/documents)
+  for (const r of serverRecords) {
+    if (r && r.id) {
+      const loc = localMap.get(r.id);
+      mergedMap.set(r.id, {
+        ...loc,
+        ...r,
+        photo: r.photo || loc?.photo || null,
+        documents:
+          r.documents && r.documents.length > 0
+            ? r.documents
+            : (loc?.documents ?? []),
+      });
+    }
+  }
+
+  // Add any local records not yet on server and push them to server
   for (const r of localRecords) {
-    if (r && r.id && !map.has(r.id)) {
-      map.set(r.id, r);
-      // Background sync: push back to server to restore database
+    if (r && r.id && !mergedMap.has(r.id)) {
+      mergedMap.set(r.id, r);
       if (serverOk) {
         saveVisaFn({ data: { record: r } }).catch(() => {});
       }
     }
   }
 
-  const merged = Array.from(map.values());
+  const merged = Array.from(mergedMap.values());
   writeLocalVisas(merged);
   return merged;
 }
@@ -199,11 +214,13 @@ export async function clearAllVisas(): Promise<void> {
 
 /**
  * Encode a visa record into a URL-safe string for instant direct-link verification.
- * Does not require any database or serverless state!
  */
 export function encodeVisaToShareString(record: VisaRecord): string {
   try {
-    const json = JSON.stringify(record);
+    const { photo: _omitPhoto, documents: _omitDocs, ...lightRecord } = record;
+    void _omitPhoto;
+    void _omitDocs;
+    const json = JSON.stringify(lightRecord);
     const bytes = new TextEncoder().encode(json);
     let binary = "";
     for (let i = 0; i < bytes.length; i++) {

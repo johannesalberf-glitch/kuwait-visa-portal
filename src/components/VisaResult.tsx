@@ -75,7 +75,9 @@ export function VisaResult({
     record.gender,
     record.expiryDate,
   );
-  const qrData = encodeURIComponent(`MOLS-EVISA-${record.id}-${record.passport}-${nameUpper}`);
+  const qrData = encodeURIComponent(
+    `MOLS-EVISA-OTP:${record.id}-TRK:${record.tracker || record.id}-${record.passport}-${nameUpper}`,
+  );
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${qrData}`;
   const genderText =
     record.gender === "M" ? "Male / ذكر" : record.gender === "F" ? "Female / أنثى" : record.gender;
@@ -97,6 +99,16 @@ export function VisaResult({
         <h2 className="text-2xl font-extrabold text-[#0b2a6b]">
           Visa Information Found · تم العثور على بيانات التأشيرة
         </h2>
+        <div className="mt-2 inline-flex flex-wrap items-center justify-center gap-3 text-xs font-mono">
+          <span className="rounded-md bg-blue-50 border border-blue-200 px-3 py-1 font-bold text-[#0b2a6b]">
+            OTP Code: {record.id}
+          </span>
+          {record.tracker && (
+            <span className="rounded-md bg-amber-50 border border-amber-200 px-3 py-1 font-bold text-amber-900">
+              Tracking Code: {record.tracker}
+            </span>
+          )}
+        </div>
       </div>
 
       {record.documents && record.documents.length > 0 && (
@@ -153,6 +165,11 @@ export function VisaResult({
                     <div className="info-item">
                       <span className="info-label">Full Name · الاسم الكامل</span>
                       <span className="info-value">{nameUpper}</span>
+                      {record.nameAr && (
+                        <span className="info-value" dir="rtl" style={{ fontSize: "0.88rem", color: "#1a5f9e" }}>
+                          {record.nameAr}
+                        </span>
+                      )}
                     </div>
                     <div className="info-item">
                       <span className="info-label">Nationality · الجنسية</span>
@@ -165,6 +182,11 @@ export function VisaResult({
                     <div className="info-item">
                       <span className="info-label">Occupation · المهنة</span>
                       <span className="info-value">{record.occupation}</span>
+                      {record.occupationAr && (
+                        <span className="info-value" dir="rtl" style={{ fontSize: "0.85rem", color: "#1a5f9e" }}>
+                          {record.occupationAr}
+                        </span>
+                      )}
                     </div>
                   </div>
                   <div className="info-section">
@@ -182,9 +204,15 @@ export function VisaResult({
                       <span className="info-value">{record.visaType}</span>
                     </div>
                     <div className="info-item">
-                      <span className="info-label">Visa No. · رقم التأشيرة</span>
+                      <span className="info-label">OTP / Visa No. · رقم التأشيرة</span>
                       <span className="info-value highlight" style={{ color: "#0d3d66" }}>{record.id}</span>
                     </div>
+                    {record.tracker && (
+                      <div className="info-item">
+                        <span className="info-label">Tracking Code · رقم التتبع</span>
+                        <span className="info-value highlight" style={{ color: "#1a5f9e" }}>{record.tracker}</span>
+                      </div>
+                    )}
                   </div>
                   <div className="info-section">
                     <div className="info-item">
@@ -257,15 +285,16 @@ function VisaStatusPanel({ record }: { record: VisaRecord }) {
           </div>
         </div>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <Field en="Visa Number" ar="رقم التأشيرة" value={record.id} accent="text-blue-700" />
+          <Field en="OTP / Visa Number" ar="رقم التأشيرة" value={record.id} accent="text-blue-700" />
+          <Field en="Tracking Code" ar="رقم التتبع" value={record.tracker || record.id} accent="text-amber-700" />
           <Field en="Passport" ar="رقم الجواز" value={(record.passport || "").toUpperCase()} />
+          <Field en="Gender" ar="الجنس" value={genderText} />
           <div className="sm:col-span-2">
             <Field en="Visa Type" ar="نوع التأشيرة" value={record.visaType} />
           </div>
           <div className="sm:col-span-2">
             <Field en="Occupation" ar="المهنة" value={record.occupation} />
           </div>
-          <Field en="Gender" ar="الجنس" value={genderText} />
           <Field en="Birth Date" ar="تاريخ الميلاد" value={record.birthDate} />
           <Field en="Issue Date" ar="تاريخ الإصدار" value={record.issueDate} />
           <Field en="Expiry Date" ar="تاريخ الانتهاء" value={record.expiryDate} accent="text-amber-600" />
@@ -340,10 +369,11 @@ const css = `
 .mols-admin .card-body { padding: 28px 32px; position: relative; z-index: 2; }
 .mols-admin .watermark { display: none; }
 .mols-admin .info-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 22px; position: relative; z-index: 3; }
+.mols-admin .info-section { display: flex; flex-direction: column; gap: 10px; }
 .mols-admin .info-item { display: flex; flex-direction: column; }
 .mols-admin .info-label { font-size: 0.65rem; font-weight: 700; color: #5a7a94; text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 4px; }
 .mols-admin .info-value { font-family: 'Playfair Display', Georgia, serif; font-size: 0.95rem; font-weight: 600; color: var(--mls-blue-dark); word-break: break-word; }
-.mols-admin .info-value.highlight { font-family: ui-monospace, monospace; font-size: 1.05rem; font-weight: 700; color: var(--mls-blue); letter-spacing: 1px; }
+.mols-admin .info-value.highlight { font-family: ui-monospace, monospace; font-size: 1.05rem; font-weight: 700; color: var(--mls-blue); letter-spacing: 1px; background: transparent !important; padding: 0 !important; }
 .mols-admin .info-value.date-block { font-family: ui-monospace, monospace; font-size: 0.9rem; }
 .mols-admin .photo-qr-section { display: flex; gap: 12px; margin-bottom: 6px; }
 .mols-admin .photo-box { width: 100px; height: 125px; background: #f0ebe0; border: 2px solid #c8dce8; border-radius: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
@@ -357,5 +387,6 @@ const css = `
 .mols-admin .card-footer { background: linear-gradient(135deg, #f5f9fc, #e8f1f8); padding: 14px 32px; border-top: 2px solid var(--mls-gold); display: flex; justify-content: space-between; align-items: center; z-index: 2; position: relative; flex-wrap: wrap; gap: 10px; }
 .mols-admin .card-footer p { font-size: 0.72rem; color: #5a7a94; letter-spacing: 1.5px; margin: 0; }
 .mols-admin .status-badge { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #e8f5e9, #c8e6c9); color: var(--mls-green); padding: 6px 14px; border-radius: 25px; font-size: 0.75rem; font-weight: 700; border: 1px solid #a5d6a7; letter-spacing: 1px; }
+.mols-admin .status-badge::before { content: ""; width: 8px; height: 8px; background: var(--mls-green); border-radius: 50%; }
 .mols-admin .ovi-emblem-pattern { position: absolute; inset: 0; background-repeat: repeat; background-size: 78px 78px; opacity: 0.09; mix-blend-mode: multiply; pointer-events: none; z-index: 1; }
 `;
