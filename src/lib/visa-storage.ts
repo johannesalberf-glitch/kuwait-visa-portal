@@ -1,263 +1,342 @@
 import {
-  lookupVisaFn,
-  listVisasFn,
-  saveVisaFn,
-  updateVisaFn,
-  deleteVisaFn,
-  clearAllVisasFn,
-  type VisaRecord,
-  type VisaDocument,
+  saveVisaOnServer,
+  listVisasOnServer,
+  findVisaOnServer,
+  updateVisaOnServer,
+  deleteVisaOnServer,
+  clearAllVisasOnServer,
 } from "./visa-storage.functions";
+import {
+  cloudSaveVisa,
+  cloudFindVisa,
+  cloudListVisas,
+  cloudDeleteVisa,
+  cloudClearAllVisas,
+} from "./cloud-kv";
 
-export type { VisaRecord, VisaDocument };
-
-export type SaveVisaResult = {
-  ok: boolean;
-  sqliteSaved: boolean;
-};
-
-const LOCAL_STORAGE_KEY = "kuwait_visa_portal_records_v1";
-
-export function readLocalVisas(): VisaRecord[] {
-  if (typeof window === "undefined" || !window.localStorage) return [];
-  try {
-    const raw = window.localStorage.getItem(LOCAL_STORAGE_KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch (e) {
-    console.warn("[visa-storage] Failed reading local storage cache:", e);
-    return [];
-  }
+export interface UploadedDoc {
+  name: string;
+  type: string;
+  dataUrl: string;
 }
 
-export function writeLocalVisas(records: VisaRecord[]): void {
-  if (typeof window === "undefined" || !window.localStorage) return;
-  try {
-    window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(records));
-  } catch (e) {
-    console.warn("[visa-storage] Failed writing local storage cache:", e);
-  }
+export interface VisaRecord {
+  id: string; // 6-digit OTP code
+  tracker: string; // 6-digit Tracking code
+  name: string;
+  nameAr?: string;
+  passport: string;
+  nationality: string;
+  nationalityAr?: string;
+  gender: string;
+  visaType: string;
+  visaTypeAr?: string;
+  occupation: string;
+  occupationAr?: string;
+  birthDate: string;
+  issueDate: string;
+  expiryDate: string;
+  photo: string | null;
+  documents?: UploadedDoc[];
 }
 
-function matchesQuery(record: VisaRecord, rawQuery: string): boolean {
-  const clean = rawQuery.trim();
-  if (!clean) return false;
-  const upper = clean.toUpperCase();
-  const digits = clean.replace(/\D/g, "");
+export const SAMPLE_VISAS: VisaRecord[] = [
+  {
+    id: "582914",
+    tracker: "847192",
+    name: "AHMED MOHAMED HASSAN",
+    nameAr: "أحمد محمد حسن",
+    passport: "A12948573",
+    nationality: "EGYPT",
+    nationalityAr: "مصر",
+    gender: "M",
+    visaType: "WORK VISA - ARTICLE 18",
+    visaTypeAr: "تأشيرة عمل - مادة 18",
+    occupation: "Civil Engineer",
+    occupationAr: "مهندس مدني",
+    birthDate: "1990-05-14",
+    issueDate: "2025-02-01",
+    expiryDate: "2025-05-01",
+    photo: null,
+    documents: [],
+  },
+  {
+    id: "847192",
+    tracker: "582914",
+    name: "FATIMA AL-ZAHRA",
+    nameAr: "فاطمة الزهراء",
+    passport: "N99384712",
+    nationality: "JORDAN",
+    nationalityAr: "الأردن",
+    gender: "F",
+    visaType: "FAMILY VISIT VISA",
+    visaTypeAr: "تأشيرة زيارة عائلية",
+    occupation: "Physician",
+    occupationAr: "طبيبة",
+    birthDate: "1994-11-22",
+    issueDate: "2025-02-10",
+    expiryDate: "2025-05-10",
+    photo: null,
+    documents: [],
+  },
+];
 
-  const idUpper = (record.id ?? "").trim().toUpperCase();
-  const trackerUpper = (record.tracker ?? "").trim().toUpperCase();
-  const passportUpper = (record.passport ?? "").trim().toUpperCase();
+// ============================================================================
+// PORTABLE SHARE LINK ENCODER / DECODER
+// ============================================================================
 
-  if (idUpper && idUpper === upper) return true;
-  if (trackerUpper && trackerUpper === upper) return true;
-  if (passportUpper && passportUpper === upper) return true;
-
-  if (digits.length === 6) {
-    if (idUpper === digits || trackerUpper === digits) return true;
-  }
-
-  return false;
-}
-
-export async function saveVisa(record: VisaRecord): Promise<SaveVisaResult> {
-  const normalized: VisaRecord = {
-    ...record,
-    id: (record.id ?? "").trim(),
-    tracker: (record.tracker ?? "").trim(),
-    passport: (record.passport ?? "").trim(),
-  };
-
-  // 1. Immediately persist to browser localStorage
-  const existing = readLocalVisas().filter((v) => v.id !== normalized.id);
-  existing.unshift(normalized);
-  writeLocalVisas(existing);
-
-  // 2. Persist to server SQLite database
-  try {
-    const res = await saveVisaFn({ data: { record: normalized } });
-    return {
-      ok: true,
-      sqliteSaved: !!res?.sqliteSaved,
-    };
-  } catch (err) {
-    console.warn("[visa-storage] Server save warning, retained in local persistence:", err);
-    return {
-      ok: true,
-      sqliteSaved: false,
-    };
-  }
-}
-
-export async function findVisa(query: string): Promise<VisaRecord | null> {
-  const clean = (query ?? "").trim();
-  if (!clean) return null;
-
-  // 1. Check local cache first for immediate responsiveness and to preserve full blobs
-  const localList = readLocalVisas();
-  const localMatch = localList.find((v) => matchesQuery(v, clean)) ?? null;
-
-  // 2. Query server SQLite database
-  try {
-    const res = await lookupVisaFn({ data: { id: clean } });
-    if (res?.record) {
-      const mergedRecord: VisaRecord = {
-        ...localMatch,
-        ...res.record,
-        photo: res.record.photo || localMatch?.photo || null,
-        documents:
-          res.record.documents && res.record.documents.length > 0
-            ? res.record.documents
-            : (localMatch?.documents ?? []),
-      };
-      const existing = localList.filter((v) => v.id !== mergedRecord.id);
-      existing.unshift(mergedRecord);
-      writeLocalVisas(existing);
-      return mergedRecord;
-    }
-  } catch (err) {
-    console.warn("[visa-storage] Server lookup error, using local cache:", err);
-  }
-
-  // 3. If found in local storage but server didn't have it, sync it back to server
-  if (localMatch) {
-    saveVisaFn({ data: { record: localMatch } }).catch(() => {});
-    return localMatch;
-  }
-
-  return null;
-}
-
-export async function listVisas(): Promise<VisaRecord[]> {
-  let serverRecords: VisaRecord[] = [];
-  let serverOk = false;
-
-  try {
-    const res = await listVisasFn();
-    serverRecords = res.records || [];
-    serverOk = true;
-  } catch (err) {
-    console.warn("[visa-storage] Server list error, loading from local cache:", err);
-  }
-
-  const localRecords = readLocalVisas();
-  const localMap = new Map<string, VisaRecord>();
-  for (const r of localRecords) {
-    if (r && r.id) localMap.set(r.id, r);
-  }
-
-  const mergedMap = new Map<string, VisaRecord>();
-
-  // Add server records, preserving any richer local fields (photo/documents)
-  for (const r of serverRecords) {
-    if (r && r.id) {
-      const loc = localMap.get(r.id);
-      mergedMap.set(r.id, {
-        ...loc,
-        ...r,
-        photo: r.photo || loc?.photo || null,
-        documents:
-          r.documents && r.documents.length > 0
-            ? r.documents
-            : (loc?.documents ?? []),
-      });
-    }
-  }
-
-  // Add any local records not yet on server and push them to server
-  for (const r of localRecords) {
-    if (r && r.id && !mergedMap.has(r.id)) {
-      mergedMap.set(r.id, r);
-      if (serverOk) {
-        saveVisaFn({ data: { record: r } }).catch(() => {});
-      }
-    }
-  }
-
-  const merged = Array.from(mergedMap.values());
-  writeLocalVisas(merged);
-  return merged;
-}
-
-export async function updateVisa(id: string, record: VisaRecord): Promise<void> {
-  const existing = readLocalVisas().map((v) => (v.id === id ? record : v));
-  writeLocalVisas(existing);
-
-  try {
-    await updateVisaFn({ data: { id, record } });
-  } catch (err) {
-    console.warn("[visa-storage] Server update error, retained in local cache:", err);
-  }
-}
-
-export async function deleteVisa(id: string): Promise<void> {
-  const filtered = readLocalVisas().filter((v) => v.id !== id);
-  writeLocalVisas(filtered);
-
-  try {
-    await deleteVisaFn({ data: { id } });
-  } catch (err) {
-    console.warn("[visa-storage] Server delete error:", err);
-  }
-}
-
-export async function clearAllVisas(): Promise<void> {
-  writeLocalVisas([]);
-
-  try {
-    await clearAllVisasFn();
-  } catch (err) {
-    console.warn("[visa-storage] Server clear error:", err);
-  }
-}
-
-/**
- * Encode a visa record into a URL-safe string for instant direct-link verification.
- */
 export function encodeVisaToShareString(record: VisaRecord): string {
   try {
-    const { photo: _omitPhoto, documents: _omitDocs, ...lightRecord } = record;
-    void _omitPhoto;
-    void _omitDocs;
-    const json = JSON.stringify(lightRecord);
+    const payload = {
+      i: record.id,
+      t: record.tracker,
+      n: record.name,
+      na: record.nameAr || "",
+      p: record.passport,
+      nat: record.nationality,
+      nata: record.nationalityAr || "",
+      g: record.gender,
+      vt: record.visaType,
+      vta: record.visaTypeAr || "",
+      o: record.occupation,
+      oa: record.occupationAr || "",
+      b: record.birthDate,
+      is: record.issueDate,
+      ex: record.expiryDate,
+    };
+    const json = JSON.stringify(payload);
     const bytes = new TextEncoder().encode(json);
     let binary = "";
-    for (let i = 0; i < bytes.length; i++) {
-      binary += String.fromCharCode(bytes[i]);
+    for (let idx = 0; idx < bytes.length; idx++) {
+      binary += String.fromCharCode(bytes[idx]);
     }
     return btoa(binary)
       .replace(/\+/g, "-")
       .replace(/\//g, "_")
       .replace(/=+$/, "");
-  } catch (e) {
-    console.error("[visa-storage] Failed encoding visa share link:", e);
+  } catch {
     return "";
   }
 }
 
-/**
- * Decode a visa record from a URL-safe share string.
- */
-export function decodeVisaFromShareString(str: string): VisaRecord | null {
+export function decodeVisaFromShareString(encoded: string): VisaRecord | null {
   try {
-    let b64 = str.replace(/-/g, "+").replace(/_/g, "/");
-    while (b64.length % 4 !== 0) {
-      b64 += "=";
-    }
-    const binary = atob(b64);
+    const clean = encoded.trim().replace(/-/g, "+").replace(/_/g, "/");
+    const padded = clean + "===".slice((clean.length + 3) % 4);
+    const binary = atob(padded);
     const bytes = new Uint8Array(binary.length);
-    for (let i = 0; i < binary.length; i++) {
-      bytes[i] = binary.charCodeAt(i);
+    for (let idx = 0; idx < binary.length; idx++) {
+      bytes[idx] = binary.charCodeAt(idx);
     }
     const json = new TextDecoder().decode(bytes);
-    const parsed = JSON.parse(json);
-    if (parsed && typeof parsed === "object" && parsed.id && parsed.name) {
-      return parsed as VisaRecord;
+    const d = JSON.parse(json);
+    if (!d || !d.i || !d.n) return null;
+    return {
+      id: String(d.i),
+      tracker: String(d.t || d.i),
+      name: String(d.n),
+      nameAr: d.na || undefined,
+      passport: String(d.p || ""),
+      nationality: String(d.nat || ""),
+      nationalityAr: d.nata || undefined,
+      gender: String(d.g || "M"),
+      visaType: String(d.vt || ""),
+      visaTypeAr: d.vta || undefined,
+      occupation: String(d.o || ""),
+      occupationAr: d.oa || undefined,
+      birthDate: String(d.b || ""),
+      issueDate: String(d.is || ""),
+      expiryDate: String(d.ex || ""),
+      photo: null,
+      documents: [],
+    };
+  } catch {
+    return null;
+  }
+}
+
+const LOCAL_STORAGE_KEY = "kw_visa_portal_records_v1";
+
+export function readLocalVisas(): VisaRecord[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = window.localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? (parsed as VisaRecord[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+export function writeLocalVisas(records: VisaRecord[]): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(records));
+  } catch {
+    // Ignore quota errors
+  }
+}
+
+function cleanKey(s: string): string {
+  return (s || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+}
+
+function matchVisaRecord(v: VisaRecord, q: string): boolean {
+  const raw = q.trim();
+  const clean = cleanKey(raw);
+  if (!raw) return false;
+  if (v.id === raw || v.tracker === raw) return true;
+  if (
+    v.id.toUpperCase() === raw.toUpperCase() ||
+    v.tracker.toUpperCase() === raw.toUpperCase() ||
+    v.passport.toUpperCase() === raw.toUpperCase()
+  ) {
+    return true;
+  }
+  if (clean.length >= 4) {
+    if (
+      cleanKey(v.id) === clean ||
+      cleanKey(v.tracker) === clean ||
+      cleanKey(v.passport) === clean
+    ) {
+      return true;
     }
-    return null;
-  } catch (e) {
-    console.warn("[visa-storage] Failed decoding visa share link:", e);
-    return null;
+  }
+  return false;
+}
+
+export async function saveVisa(record: VisaRecord): Promise<{ ok: true }> {
+  const normalized: VisaRecord = {
+    ...record,
+    id: record.id.trim(),
+    tracker: (record.tracker || record.id).trim(),
+    passport: record.passport.trim().toUpperCase(),
+  };
+
+  // Save locally in browser
+  const existing = readLocalVisas().filter((v) => v.id !== normalized.id);
+  existing.unshift(normalized);
+  writeLocalVisas(existing);
+
+  // Save on server (SQLite + Cross-Device Cloud Registry)
+  try {
+    await saveVisaOnServer({ data: normalized });
+  } catch {
+    await cloudSaveVisa(normalized);
+  }
+  return { ok: true };
+}
+
+export async function listVisas(): Promise<VisaRecord[]> {
+  let serverRecords: VisaRecord[] = [];
+  try {
+    serverRecords = await listVisasOnServer();
+  } catch {
+    try {
+      serverRecords = await cloudListVisas();
+    } catch {
+      serverRecords = [];
+    }
+  }
+
+  const localRecords = readLocalVisas();
+  const byId = new Map<string, VisaRecord>();
+
+  for (const r of serverRecords) {
+    byId.set(r.id, r);
+  }
+  for (const r of localRecords) {
+    if (!byId.has(r.id)) {
+      byId.set(r.id, r);
+    }
+  }
+
+  const merged = Array.from(byId.values());
+  if (merged.length > 0) {
+    writeLocalVisas(merged);
+    return merged;
+  }
+
+  return SAMPLE_VISAS;
+}
+
+export async function findVisa(query: string): Promise<VisaRecord | null> {
+  const q = query.trim();
+  if (!q) return null;
+
+  // 1. Check server (SQLite + Cross-Device Cloud Registry)
+  try {
+    const serverHit = await findVisaOnServer({ data: { query: q } });
+    if (serverHit) {
+      const local = readLocalVisas().filter((v) => v.id !== serverHit.id);
+      local.unshift(serverHit);
+      writeLocalVisas(local);
+      return serverHit;
+    }
+  } catch {
+    // Fall through to direct cloud & local lookup
+  }
+
+  // 2. Direct cloud lookup fallback
+  try {
+    const cloudHit = await cloudFindVisa(q);
+    if (cloudHit) {
+      const local = readLocalVisas().filter((v) => v.id !== cloudHit.id);
+      local.unshift(cloudHit);
+      writeLocalVisas(local);
+      return cloudHit;
+    }
+  } catch {
+    // Fall through to local lookup
+  }
+
+  // 3. Check local browser storage
+  const localRecords = readLocalVisas();
+  const localHit = localRecords.find((v) => matchVisaRecord(v, q));
+  if (localHit) {
+    return localHit;
+  }
+
+  // 4. Check built-in sample visas
+  const sampleHit = SAMPLE_VISAS.find((v) => matchVisaRecord(v, q));
+  return sampleHit ?? null;
+}
+
+export async function updateVisa(
+  id: string,
+  patch: Partial<Omit<VisaRecord, "id">>,
+): Promise<void> {
+  const local = readLocalVisas();
+  const idx = local.findIndex((v) => v.id === id);
+  if (idx !== -1) {
+    local[idx] = { ...local[idx], ...patch, id };
+    writeLocalVisas(local);
+  }
+  try {
+    await updateVisaOnServer({ data: { id, patch } });
+  } catch {
+    if (idx !== -1) {
+      await cloudSaveVisa(local[idx]);
+    }
+  }
+}
+
+export async function deleteVisa(id: string): Promise<void> {
+  const local = readLocalVisas().filter((v) => v.id !== id);
+  writeLocalVisas(local);
+  try {
+    await deleteVisaOnServer({ data: { id } });
+  } catch {
+    await cloudDeleteVisa(id);
+  }
+}
+
+export async function clearAllVisas(): Promise<void> {
+  writeLocalVisas([]);
+  try {
+    await clearAllVisasOnServer();
+  } catch {
+    await cloudClearAllVisas();
   }
 }
